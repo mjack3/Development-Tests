@@ -492,6 +492,8 @@
 	
 	<!-- BillingProess -->
 	
-	
+	<bean id="bp" class="domain.BillingProcess">
+		<property name="wait" value="1" />
+	</bean>
  
 </beans>

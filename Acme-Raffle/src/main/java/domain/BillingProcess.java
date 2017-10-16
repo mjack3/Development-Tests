@@ -8,7 +8,7 @@ import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,10 +22,10 @@ public class BillingProcess extends DomainEntity {
 
 
 	private Date	moment;
-	private boolean	sw;
+	private String	wait;
 
 
-	@DateTimeFormat(pattern = "MM/yyyy")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	public Date getMoment() {
 		return this.moment;
@@ -35,13 +35,13 @@ public class BillingProcess extends DomainEntity {
 		this.moment = moment;
 	}
 
-	@NotNull
-	public boolean isSw() {
-		return this.sw;
+	@Pattern(regexp = "1|12")
+	public String getWait() {
+		return this.wait;
 	}
 
-	public void setSw(final boolean sw) {
-		this.sw = sw;
+	public void setWait(final String wait) {
+		this.wait = wait;
 	}
 
 }
