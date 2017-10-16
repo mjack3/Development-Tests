@@ -3,6 +3,7 @@ package domain;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -32,6 +33,7 @@ public class Raffle extends DomainEntity {
 
 	public Raffle() {
 		super();
+		this.setBills(new HashSet<Bill>());
 	}
 
 	@NotBlank
@@ -91,6 +93,7 @@ public class Raffle extends DomainEntity {
 	private Collection<Participation>	participations;
 	private Manager						manager;
 	private Collection<Code>			codes;
+	private Collection<Bill>			bills;
 
 
 	@OneToMany(mappedBy = "raffle")
@@ -127,6 +130,16 @@ public class Raffle extends DomainEntity {
 
 	public void setCodes(final Collection<Code> codes) {
 		this.codes = codes;
+	}
+
+	@NotNull
+	@OneToMany(mappedBy = "raffle")
+	public Collection<Bill> getBills() {
+		return this.bills;
+	}
+
+	public void setBills(final Collection<Bill> bills) {
+		this.bills = bills;
 	}
 
 }

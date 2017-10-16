@@ -482,5 +482,16 @@
 	<bean id="tabooWord20" class="domain.TabooWord">
 		<property name="name" value="corruption" />
 	</bean>
+	
+	
+	<!--***************************
+	******************************
+	 2.0
+	 ******************************
+	 ****************************** -->
+	
+	<!-- BillingProess -->
+	
+	
  
 </beans>

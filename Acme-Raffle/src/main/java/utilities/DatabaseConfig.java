@@ -12,6 +12,6 @@ package utilities;
 
 public interface DatabaseConfig {
 
-	public final String PersistenceUnit = "Acme-Raffle";
+	public final String	PersistenceUnit	= "Acme-Raffle20";
 
 }
