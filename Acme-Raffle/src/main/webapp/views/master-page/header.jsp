@@ -82,6 +82,14 @@
 								<li><a href="mana/edit.do?userAccountID=${id}"><spring:message code="master.page.actor.edit" /></a></li>
 								<li><a href="raffle/managers/create.do"><spring:message
 											code="master.page.create" /> </a></li>
+								<li><a href="mana/creditcard/create.do"><spring:message
+											code="master.page.creditcard.create" /> </a></li>
+								
+								<li><a href="mana/creditcard/edit.do"><spring:message
+											code="master.page.creditcard.edit" /> </a></li>
+											<li><a href="mana/administrator/list.do"><spring:message
+											code="master.page.mana.list" /> </a></li>
+											
 								</security:authorize>
 								
 								<security:authorize access="hasRole('USER')">

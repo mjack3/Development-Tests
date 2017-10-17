@@ -21,7 +21,8 @@
 		<form:hidden path="userAccount.authorities" />
 		<form:hidden path="userAccount.banned" />
 		<form:hidden path="raffles" />
-
+		<form:hidden path="creditCard"/>
+		<form:hidden path="isDebtor"/>
 
 	    <div class="form-group" style="width: 20%;"> 
 	    

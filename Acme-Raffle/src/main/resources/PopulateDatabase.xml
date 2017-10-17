@@ -521,12 +521,24 @@
 		<property name="ticket"  value = "#AAAAA1111"/>
 		<property name="money">
 			<bean class="domain.Money">
-				<property name="amount"  value="150.0"/>
+				<property name="amount"  value="99.95"/>
 				<property name="currency" value="€" />
 			</bean>
 		</property>
 		<property name="moment" value="16/10/2015" />
 		<property name="raffle" ref="raffle1" />
+	</bean>
+	
+	<bean id="bill2" class="domain.Bill">
+		<property name="ticket"  value = "#AAAAA1112"/>
+		<property name="money">
+			<bean class="domain.Money">
+				<property name="amount"  value="99.95"/>
+				<property name="currency" value="€" />
+			</bean>
+		</property>
+		<property name="moment" value="16/10/2015" />
+		<property name="raffle" ref="raffle2" />
 	</bean>
  
 </beans>

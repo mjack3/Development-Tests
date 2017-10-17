@@ -28,7 +28,7 @@ public class ManagerService {
 	//Manager repositories
 
 	@Autowired
-	private ManagerRepository	managerRepository;
+	private ManagerRepository managerRepository;
 
 
 	//Constructor
@@ -120,6 +120,10 @@ public class ManagerService {
 	public Collection<Code> getCodes(final Integer totalCodes, final Integer numWinner) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public List<Manager> listofdebtor() {
+		return managerRepository.listofdebtor();
 	}
 
 }

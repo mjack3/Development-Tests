@@ -53,7 +53,7 @@ public class CreditCard {
 		this.month = month;
 	}
 
-	@Min(17)
+	@Range(min = 17, max = 99)
 	public Integer getYear() {
 		return this.year;
 	}

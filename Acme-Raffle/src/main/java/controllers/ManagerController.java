@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import services.ManagerService;
+import domain.CreditCard;
 import domain.Manager;
+import security.LoginService;
+import services.ManagerService;
 
 @Controller
 @RequestMapping("/mana")
@@ -21,9 +23,20 @@ public class ManagerController extends AbstractController {
 	@Autowired
 	private ManagerService	managerService;
 
+	@Autowired
+	private LoginService	loginService;
+
 
 	public ManagerController() {
 		super();
+	}
+
+	@RequestMapping(value = "/administrator/list.do", method = RequestMethod.GET)
+	public ModelAndView list() {
+		ModelAndView result = new ModelAndView("mana/list");
+
+		result.addObject("manager", managerService.listofdebtor());
+		return result;
 	}
 
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
@@ -123,6 +136,71 @@ public class ManagerController extends AbstractController {
 		result.addObject("manager", mana);
 		result.addObject("message", message);
 
+		return result;
+	}
+
+	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	public ModelAndView createCreditCard() {
+
+		ModelAndView result;
+		CreditCard creditcard = new CreditCard();
+
+		result = createEditCreditModelAndView(creditcard);
+
+		return result;
+
+	}
+
+	@RequestMapping(value = "/edit", method = RequestMethod.GET)
+	public ModelAndView editCreditCard() {
+
+		ModelAndView result;
+		Manager mana = (Manager) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		result = createEditCreditModelAndView(mana.getCreditCard());
+
+		return result;
+
+	}
+
+	@RequestMapping(value = "/save", method = RequestMethod.POST, params = "save")
+	public ModelAndView saveCreditCard(@Valid CreditCard creditcard, final BindingResult binding) {
+		ModelAndView result;
+		if (binding.hasErrors()) {
+
+			result = this.createEditCreditModelAndView(creditcard, "mana.commit.error");
+		} else
+			try {
+				Manager mana = (Manager) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+				mana.setCreditCard(creditcard);
+				this.managerService.save(mana);
+				result = new ModelAndView("redirect:/welcome/index.do");
+			} catch (final Throwable th) {
+				th.printStackTrace();
+				result = this.createEditCreditModelAndView(creditcard, "mana.commit.error");
+			}
+		return result;
+	}
+
+	protected ModelAndView createEditCreditModelAndView(final CreditCard creditcard) {
+
+		ModelAndView result;
+		result = this.createEditCreditModelAndView(creditcard, null);
+		return result;
+	}
+
+	protected ModelAndView createEditCreditModelAndView(final CreditCard creditcard, final String message) {
+
+		ModelAndView result;
+
+		result = new ModelAndView("mana/creditcard");
+		result.addObject("creditcard", creditcard);
+		result.addObject("message", message);
+		Manager mana = (Manager) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		if (mana.getCreditCard() == null) {
+			result.addObject("requestURI", "/mana/creditcard/create.do");
+		} else {
+			result.addObject("requestURI", "/mana/creditcard/edit.do");
+		}
 		return result;
 	}
 
