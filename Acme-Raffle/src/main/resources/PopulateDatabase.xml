@@ -135,9 +135,22 @@
   </property>
  </bean>
 
+<!-- Credit Cards -->
+
+ <bean id="c1" class="domain.CreditCard">
+ 	
+ 	<property name="number" value="4716 3238 3598 7580" />
+ 	<property name="CVV" value="892" />
+ 	<property name="month" value="12" />
+ 	<property name="year" value="17" />
+ 	<property name="brandName" value="VISA"/>
+ 
+ </bean>
+
 <!-- MANAGERS -->
 
  <bean id="manager1" class="domain.Manager">
+  <property name="creditCard" ref="c1" />
   <property name="userAccount" ref="userAccount4" />
   <property name="name" value="nameManager1" />
   <property name="surname" value="surnameManager1" />
@@ -494,6 +507,26 @@
 	
 	<bean id="bp" class="domain.BillingProcess">
 		<property name="wait" value="1" />
+	</bean>
+	
+	<!-- Payment -->
+	
+	<bean id="payment1" class="domain.Payment">
+		<property name="creditCard" ref="c1" />
+	</bean>
+	
+	<!-- Bill -->
+	
+	<bean id="bill1" class="domain.Bill">
+		<property name="ticket"  value = "#AAAAA1111"/>
+		<property name="money">
+			<bean class="domain.Money">
+				<property name="amount"  value="150.0"/>
+				<property name="currency" value="€" />
+			</bean>
+		</property>
+		<property name="moment" value="16/10/2015" />
+		<property name="raffle" ref="raffle1" />
 	</bean>
  
 </beans>

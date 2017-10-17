@@ -1,19 +1,14 @@
 
 package domain;
 
-import java.util.Date;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.Future;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.CreditCardNumber;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Embeddable
 @Access(AccessType.PROPERTY)
@@ -24,18 +19,19 @@ public class CreditCard {
 	}
 
 
-	private Integer	number;
+	private String	number;
 	private Integer	CVV;
-	private Date	expiryDate;
+	private Integer	month;
+	private Integer	year;
 	private String	brandName;
 
 
 	@CreditCardNumber
-	public Integer getNumber() {
+	public String getNumber() {
 		return this.number;
 	}
 
-	public void setNumber(final Integer number) {
+	public void setNumber(final String number) {
 		this.number = number;
 	}
 
@@ -48,15 +44,22 @@ public class CreditCard {
 		this.CVV = cVV;
 	}
 
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "MM/yyyy")
-	@Future
-	public Date getExpiryDate() {
-		return this.expiryDate;
+	@Range(min = 1, max = 12)
+	public Integer getMonth() {
+		return this.month;
 	}
 
-	public void setExpiryDate(final Date expiryDate) {
-		this.expiryDate = expiryDate;
+	public void setMonth(final Integer month) {
+		this.month = month;
+	}
+
+	@Min(17)
+	public Integer getYear() {
+		return this.year;
+	}
+
+	public void setYear(final Integer year) {
+		this.year = year;
 	}
 
 	@Pattern(regexp = "VISA|MASTERCARD|DISCOVER|DINNERS|AMEX")

@@ -8,6 +8,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
 
 @Entity
 @Access(AccessType.PROPERTY)
@@ -26,6 +27,7 @@ public class Manager extends Actor {
 	//	Relationships ---------------------------
 
 	private Collection<Raffle>	raffles;
+	private CreditCard			creditCard;
 
 
 	@OneToMany(mappedBy = "manager")
@@ -64,6 +66,15 @@ public class Manager extends Actor {
 
 	public void setIsDebtor(final Boolean isDebtor) {
 		this.isDebtor = isDebtor;
+	}
+
+	@Valid
+	public CreditCard getCreditCard() {
+		return this.creditCard;
+	}
+
+	public void setCreditCard(final CreditCard creditCard) {
+		this.creditCard = creditCard;
 	}
 
 }
