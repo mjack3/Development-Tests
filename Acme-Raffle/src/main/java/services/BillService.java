@@ -15,8 +15,8 @@ import org.springframework.util.Assert;
 
 import repositories.BillRepository;
 import security.LoginService;
-import domain.Administrator;
 import domain.Bill;
+import domain.Configuration;
 import domain.Manager;
 import domain.Raffle;
 
@@ -35,37 +35,19 @@ public class BillService {
 	@Autowired
 	private AdministratorService	administratorService;
 
+	@Autowired
+	private ConfigurationService	configurationService;
+
 
 	public BillService() {
 		super();
 	}
 
-	public Bill create() {
+	public Bill create(final Double fee) {
 		final Bill bill = new Bill();
-
 		bill.setTicket(this.generateTicker());
-
-		bill.setMoment(new Date());
-		bill.setMoney(new Double(99.95));
-
-		return bill;
-
-	}
-
-	public Bill generate(final Bill bill) {
-
-		final Date today = new Date();
-		final Administrator admin = (Administrator) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
-
-		Assert.isTrue(today.getMonth() - admin.getGenerateDate().getMonth() >= 1);
-		admin.setGenerateDate(today);
-		this.administratorService.save(admin);
-		for (final Raffle a : this.raffleService.findAll()) {
-			bill.setRaffle(a);
-			a.getBills().add(bill);
-			this.billRepository.save(bill);
-
-		}
+		bill.setMoment(new Date(System.currentTimeMillis() - 1));
+		bill.setMoney(fee);
 
 		return bill;
 
@@ -182,4 +164,33 @@ public class BillService {
 		return this.billRepository.managerBillUnpaid();
 	}
 
+	public void generateBills(final Configuration configuration) {
+		// TODO Auto-generated method stub
+		Assert.isTrue(LoginService.hasRole("ADMIN"));
+		final Date moment = new Date();
+		moment.setYear(configuration.getYear() - 1900);
+		moment.setMonth(configuration.getMonth() - 1);
+		moment.setDate(1);
+		moment.setHours(0);
+		moment.setMinutes(0);
+		moment.setSeconds(0);
+
+		final Collection<Raffle> raffles = this.raffleService.findAllByMoment(moment);
+		Assert.notNull(raffles);
+
+		for (final Raffle raffle : raffles) {
+			final Bill bill = this.create(configuration.getFee());
+			//bill.setTicket("#" + RandomStringUtils.randomAlphanumeric(9).toUpperCase());
+			bill.setRaffle(raffle);
+			final Bill saved = this.save(bill);
+			raffle.getBills().add(saved);
+			this.raffleService.save(raffle);
+		}
+
+		//	actualizar archivo de configuracion
+
+		configuration.addHistoric(configuration.getMonth(), configuration.getYear());
+		this.configurationService.save(configuration);
+
+	}
 }

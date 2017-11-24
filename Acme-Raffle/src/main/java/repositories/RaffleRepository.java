@@ -1,6 +1,8 @@
 
 package repositories;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,5 +24,8 @@ public interface RaffleRepository extends JpaRepository<Raffle, Integer> {
 
 	@Query("select a.raffles from Manager a where a.isDebtor=true")
 	List<Raffle> raffleManagerIsDebtor();
+
+	@Query("select r from Raffle r where r.publicationTime <= ?1")
+	Collection<Raffle> findAllByMoment(Date moment);
 
 }

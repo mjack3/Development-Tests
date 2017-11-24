@@ -9,30 +9,27 @@
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags"%>
 
+<form:form action="${actionParam }" modelAttribute="configuration">
 
 
-<h3><spring:message code="bill.process"></spring:message></h3>
-<iframe src="http://free.timeanddate.com/countdown/i5y7f7l3/cf101/cm0/cu4/ct2/cs0/ca0/cr0/ss0/cac000/cpc000/pcd8873c/tcfff/fs100/szw320/szh135/tac000/tpc000/mac000/mpc000/iso${date}T00:00:00" 
-allowTransparency="true" frameborder="0" width="320" height="135"></iframe>
-
-
-<jstl:if test="${diff>=1}">
-<form:form action="administrator/bill/generateSave.do" modelAttribute="bill">
 <form:hidden path="id"/>
 <form:hidden path="version"/>
-<form:hidden path="moment"/>
-<form:hidden path="ticket"/>
-<form:hidden path="raffle"/>
+<form:hidden path="historic"/>
+
+	<acme:textbox2 code="configuration.month" path="month"/>
+	<acme:textbox2 code="configuration.year" path="year"/>
 
 
-<form:label path="money"> <spring:message code="bill.money"/> </form:label>
-		<br />
-		<form:input path="money" value="99.95"/>
-		<form:errors cssClass="error" path="money" /> <br />
-		
-		
-<spring:message code="bill.generate" var="generate"/>		
-<input type="submit" name="save" value="${generate}" />
+
+ 
+ 	<legend ></legend>
+ 	<acme:textbox readonly="true" code="configuration.fee" path="fee"/>
+ 
+ 
+
+
+
+<acme:submit name="save" code="configuration.save"/>
+<acme:cancel url="/welcome/index.do" code="acme.cancel"/>
 
 </form:form>
-</jstl:if>

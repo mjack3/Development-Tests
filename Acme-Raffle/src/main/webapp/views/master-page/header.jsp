@@ -119,7 +119,7 @@
 
 								<li><a href="mana/administrator/list.do"><spring:message
 											code="master.page.administrator.mana" /> </a></li>
-								<li><a href="administrator/bill/generate.do"><spring:message
+								<li><a href="bill/administrator/generate.do"><spring:message
 											code="master.page.administrator.bill" /> </a></li>
 								<li><a href="administrator/bill/list.do"><spring:message
 											code="master.page.bill.list" /> </a></li>

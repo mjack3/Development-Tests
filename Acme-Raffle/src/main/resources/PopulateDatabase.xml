@@ -154,7 +154,6 @@
   <property name="postal" value="11560" />
   <property name="city" value="Sevilla" />
   <property name="country" value="España" />
-  <property name="generateDate" value="22/09/2017"/>
   <property name="comments">
 			<list></list>
 		</property>
@@ -1030,6 +1029,18 @@
 		<property name="prize" ref="prize2" />
 	</bean>
 	
+	
+	
+	<!-- PARA GENERAR FACTURAS DE LAS RIFAS -->
+
+	
+	
+	<bean id="configuration" class="domain.Configuration">
+		<property name="fee" value="99.95" />
+		<property name="historic">
+			<value>01/1900</value>
+		</property>
+	</bean>
 	
  
 </beans>

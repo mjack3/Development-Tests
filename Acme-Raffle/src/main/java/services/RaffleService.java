@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import repositories.RaffleRepository;
 import domain.AuditReport;
 import domain.Participation;
 import domain.Prize;
 import domain.Raffle;
-import repositories.RaffleRepository;
 
 @Service
 @Transactional
@@ -100,7 +100,16 @@ public class RaffleService {
 	}
 
 	public List<Raffle> raffleManagerIsDebtor() {
-		return raffleRepository.raffleManagerIsDebtor();
+		return this.raffleRepository.raffleManagerIsDebtor();
+	}
+
+	public Collection<Raffle> findAllByMoment(final Date moment) {
+		// TODO Auto-generated method stub
+		Assert.notNull(moment);
+
+		final Collection<Raffle> collection = this.raffleRepository.findAllByMoment(moment);
+
+		return collection;
 	}
 
 }
