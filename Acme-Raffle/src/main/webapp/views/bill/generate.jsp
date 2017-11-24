@@ -23,7 +23,7 @@
 
  
  	<legend ></legend>
- 	<acme:textbox readonly="true" code="configuration.fee" path="fee"/>
+ 	<acme:textbox code="configuration.fee" path="fee"/>
  
  
 
