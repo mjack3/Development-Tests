@@ -1,7 +1,6 @@
 
 package controllers.administrator;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -14,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import domain.Administrator;
-import domain.Bill;
 import security.LoginService;
 import services.AdministratorService;
 import services.BillService;
+import domain.Administrator;
+import domain.Bill;
 
 @RequestMapping("/administrator")
 @Controller
@@ -98,7 +97,7 @@ public class AdministratorController {
 
 		ModelAndView res;
 		res = new ModelAndView("bill/list");
-		List<Bill> bill = billService.findAll();
+		final List<Bill> bill = this.billService.findAll();
 
 		res.addObject("requestURI", "/administrator/bill/list.do");
 		res.addObject("bill", bill);
@@ -106,43 +105,14 @@ public class AdministratorController {
 
 	}
 
-	@RequestMapping("/bill/generate")
-	public ModelAndView generate() {
-		ModelAndView res;
-		Date today = new Date();
-		res = new ModelAndView("bill/generate");
-
-		Administrator admin = (Administrator) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
-
-		res.addObject("diff", today.getMonth() - admin.getGenerateDate().getMonth());
-		admin.getGenerateDate().setMonth(admin.getGenerateDate().getMonth() + 1);
-
-		res.addObject("date", admin.getGenerateDate().toString());
-		Bill bill = billService.create();
-
-		res.addObject("bill", bill);
-
-		return res;
-	}
-
-	@RequestMapping(value = "/bill/generateSave.do", method = RequestMethod.POST, params = "save")
-	public ModelAndView saveAdministrator(@Valid Bill bill, final BindingResult binding) {
-		ModelAndView result;
-		billService.generate(bill);
-
-		result = new ModelAndView("redirect:/welcome/index.do");
-
-		return result;
-	}
-
-	protected ModelAndView createEditModelAndViewBill(Bill bill) {
+	protected ModelAndView createEditModelAndViewBill(final Bill bill) {
 
 		ModelAndView result;
 		result = this.createEditModelAndViewBill(bill, null);
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndViewBill(Bill bill, final String message) {
+	protected ModelAndView createEditModelAndViewBill(final Bill bill, final String message) {
 
 		ModelAndView result;
 
