@@ -18,13 +18,13 @@
 	<spring:message code="mustegisterCredit" />
 </jstl:when>
 
-<jstl:when test="${e.payed == null}">
+<jstl:when test="${e.payed == null  and today.after(e.raffle.publicationTime)}">
 	<a href="bill/manager/pay.do?q=${e.id}"> <spring:message
 						code="bill.pay" />
 				</a>
 </jstl:when>
 <jstl:otherwise>
-	<spring:message code="bill.paid"/>: <jstl:out value="${e.payed }"/>
+	<spring:message code="bill.paid"/>: <jstl:out value="${e.payed}"/>
 </jstl:otherwise>
 
 </jstl:choose>

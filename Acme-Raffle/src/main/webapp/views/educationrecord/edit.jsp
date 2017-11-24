@@ -11,7 +11,7 @@
 
 
 
-<form:form action="educationrecord/auditor/saveEdit.do" modelAttribute="educationrecord">
+<form:form action="educationrecord/auditor/saveEdit.do" modelAttribute="educationRecord">
 
 		<form:hidden path="id" />
 		<form:hidden path="version" />
@@ -23,10 +23,7 @@
 		<form:input path="title" class="form-control" />
 		<form:errors cssClass="error" path="title" /> <br />
 		
-		<form:label path="description"> <spring:message code="workrecord.description"/> </form:label>
-		<br />
-		<form:input path="description" class="form-control"/>
-		<form:errors cssClass="error" path="description" /> <br />
+		<acme:textarea2 code="workrecord.description" path="description"/>
 		
 		<form:label path="startDate" > <spring:message code="workrecord.startDate"/> </form:label>
 		<br/>

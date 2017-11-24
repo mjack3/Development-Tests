@@ -4,9 +4,11 @@ package domain;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.CreditCardNumber;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
 @Entity
@@ -26,42 +28,47 @@ public class CreditCard extends DomainEntity {
 
 
 	@CreditCardNumber
+	@NotBlank
 	public String getNumber() {
 		return this.number;
 	}
 
-	public void setNumber(final String number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 
 	@Range(min = 100, max = 999)
+	@NotNull
 	public Integer getCVV() {
 		return this.CVV;
 	}
 
-	public void setCVV(final Integer cVV) {
+	public void setCVV(Integer cVV) {
 		this.CVV = cVV;
 	}
 
 	@Range(min = 1, max = 12)
+	@NotNull
 	public Integer getMonth() {
 		return this.month;
 	}
 
-	public void setMonth(final Integer month) {
+	public void setMonth(Integer month) {
 		this.month = month;
 	}
 
 	@Range(min = 17, max = 99)
+	@NotNull
 	public Integer getYear() {
 		return this.year;
 	}
 
-	public void setYear(final Integer year) {
+	public void setYear(Integer year) {
 		this.year = year;
 	}
 
 	@Pattern(regexp = "VISA|MASTERCARD|DISCOVER|DINNERS|AMEX")
+	@NotNull
 	public String getBrandName() {
 		return this.brandName;
 	}

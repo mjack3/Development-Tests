@@ -14,7 +14,7 @@
 
 
 
-<form:form action="educationrecord/auditor/saveCreate.do" modelAttribute="educationrecord">
+<form:form action="educationrecord/auditor/saveCreate.do" modelAttribute="educationRecord">
 
 		<form:hidden path="id" />
 		<form:hidden path="version" />

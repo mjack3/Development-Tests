@@ -14,7 +14,7 @@ import javax.persistence.OneToOne;
 @Access(AccessType.PROPERTY)
 public class Manager extends Actor {
 
-	private Boolean	isDebtor;
+	private Boolean isDebtor;
 
 
 	public Manager() {
@@ -25,7 +25,7 @@ public class Manager extends Actor {
 	//	Relationships ---------------------------
 
 	private Collection<Raffle>	raffles;
-	private CreditCard			CreditCard;
+	private CreditCard			creditCard;
 
 
 	@OneToMany(mappedBy = "manager")
@@ -68,11 +68,11 @@ public class Manager extends Actor {
 
 	@OneToOne
 	public CreditCard getCreditCard() {
-		return this.CreditCard;
+		return this.creditCard;
 	}
 
 	public void setCreditCard(final CreditCard creditCard) {
-		this.CreditCard = creditCard;
+		this.creditCard = creditCard;
 	}
 
 }

@@ -44,8 +44,7 @@
 		<div class="form-group" style="width: 55%;">
 		<label><spring:message code='creditcard.brandName' /></label> 
 		<br/>
-		<select
-			name="brandname">
+		<select name="brandName">
 			<option value="VISA">VISA</option>
 			<option value="MASTERCARD">MASTERCARD</option>
 			<option value="DISCOVER">DISCOVER</option>

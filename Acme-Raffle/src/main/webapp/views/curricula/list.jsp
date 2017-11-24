@@ -11,7 +11,7 @@
 
 <security:authorize access="hasRole('AUDITOR')">
 <div class="btn-group btn-group-xs" role="group" aria-label="label">
-		
+		<jstl:if test="${auditor.curricula!=null}">
 			<button
 				onclick="javascript:location.href='educationrecord/auditor/create.do'"
 				type="button" class="btn btn-default">
@@ -35,7 +35,7 @@
 		
 		<br /><br />
 		
-		
+		</jstl:if>
 
 	</div>
 

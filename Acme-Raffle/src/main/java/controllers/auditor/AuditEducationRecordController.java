@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,8 +44,8 @@ public class AuditEducationRecordController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public ModelAndView edit(@RequestParam int q) {
 		ModelAndView result;
-		EducationRecord educationrecord = educationRecordService.findOne(q);
-		result = createEditModelAndView(educationrecord, null);
+		EducationRecord educationRecord = educationRecordService.findOne(q);
+		result = createEditModelAndView(educationRecord, null);
 
 		return result;
 
@@ -53,31 +54,37 @@ public class AuditEducationRecordController {
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
 		ModelAndView result;
-		EducationRecord educationrecord = new EducationRecord();
+		EducationRecord educationRecord = educationRecordService.create();
 
-		result = createNewModelAndView(educationrecord, null);
+		result = createCreateModelAndView(educationRecord, null);
 
 		return result;
 
 	}
 
 	@RequestMapping(value = "/saveCreate", method = RequestMethod.POST)
-	public ModelAndView saveCreate(@Valid EducationRecord educationrecord, BindingResult binding) {
+	public ModelAndView saveCreate(@Valid EducationRecord educationRecord, BindingResult binding) {
 		ModelAndView result;
 
 		if (binding.hasErrors()) {
 
-			result = createNewModelAndView(educationrecord, null);
+			result = createCreateModelAndView(educationRecord, null);
 		} else
 
 		{
 			try {
 
-				educationRecordService.save(educationrecord);
+				if (educationRecord.getEndDate().before(educationRecord.getStartDate())) {
+					binding.rejectValue("endDate", "error.date", "error");
+					throw new IllegalArgumentException();
+
+				}
+
+				educationRecordService.save(educationRecord);
 				result = new ModelAndView("redirect:/educationrecord/auditor/list.do");
 			} catch (Throwable e) {
-
-				result = createNewModelAndView(educationrecord, "commit.error");
+				e.printStackTrace();
+				result = createCreateModelAndView(educationRecord, "commit.error");
 			}
 		}
 
@@ -85,41 +92,68 @@ public class AuditEducationRecordController {
 	}
 
 	@RequestMapping(value = "/saveEdit", method = RequestMethod.POST)
-	public ModelAndView saveEdit(@Valid EducationRecord educationrecord, BindingResult binding) {
+	public ModelAndView saveEdit(@Valid EducationRecord educationRecord, BindingResult binding) {
 		ModelAndView result;
 
 		if (binding.hasErrors()) {
+			for (ObjectError e : binding.getAllErrors()) {
+				System.out.println(e.getDefaultMessage());
+			}
 
-			result = createEditModelAndView(educationrecord, null);
+			result = createEditModelAndView(educationRecord, null);
 		} else
 
 		{
 			try {
+				if (educationRecord.getEndDate().before(educationRecord.getStartDate())) {
+					binding.rejectValue("endDate", "error.date", "error");
+					throw new IllegalArgumentException();
 
-				educationRecordService.save(educationrecord);
+				}
+
+				educationRecordService.save(educationRecord);
 				result = new ModelAndView("redirect:/educationrecord/auditor/list.do");
 			} catch (Throwable e) {
 				e.printStackTrace();
 
-				result = createEditModelAndView(educationrecord, "commit.error");
+				result = createEditModelAndView(educationRecord, "commit.error");
 			}
 		}
 
 		return result;
 	}
 
-	protected ModelAndView createNewModelAndView(EducationRecord educationrecord, String message) {
+	protected ModelAndView createEditModelAndView(final EducationRecord educationRecord) {
+
 		ModelAndView result;
-		result = new ModelAndView("educationrecord/create");
-		result.addObject("educationrecord", educationrecord);
-		result.addObject("message", message);
+		result = this.createEditModelAndView(educationRecord, null);
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(EducationRecord educationrecord, String message) {
-		ModelAndView result = new ModelAndView("educationrecord/edit");
+	protected ModelAndView createEditModelAndView(final EducationRecord educationRecord, final String message) {
 
-		result.addObject("educationrecord", educationrecord);
+		ModelAndView result;
+
+		result = new ModelAndView("educationrecord/edit");
+		result.addObject("educationRecord", educationRecord);
+		result.addObject("message", message);
+
+		return result;
+	}
+
+	protected ModelAndView createCreateModelAndView(final EducationRecord educationRecord) {
+
+		ModelAndView result;
+		result = this.createEditModelAndView(educationRecord, null);
+		return result;
+	}
+
+	protected ModelAndView createCreateModelAndView(final EducationRecord educationRecord, final String message) {
+
+		ModelAndView result;
+
+		result = new ModelAndView("educationrecord/create");
+		result.addObject("educationRecord", educationRecord);
 		result.addObject("message", message);
 
 		return result;

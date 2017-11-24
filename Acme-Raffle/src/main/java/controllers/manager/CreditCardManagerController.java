@@ -7,14 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import services.CreditCardService;
-import services.ManagerService;
 import domain.CreditCard;
 import domain.Manager;
+import services.CreditCardService;
+import services.ManagerService;
 
 @RequestMapping("/creditcard/manager/")
 @Controller
@@ -29,10 +30,10 @@ public class CreditCardManagerController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
-		final ModelAndView resul = new ModelAndView("creditcard/create");
-		final CreditCard creditCard = new CreditCard();
 
-		resul.addObject("creditCard", creditCard);
+		CreditCard creditCard = new CreditCard();
+
+		ModelAndView resul = createEditModelAndViewBill(creditCard, null);
 
 		return resul;
 	}
@@ -47,28 +48,34 @@ public class CreditCardManagerController {
 		return resul;
 	}
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public ModelAndView save(@Valid final CreditCard creditCard, final BindingResult binding) {
+	public ModelAndView save(@Valid CreditCard creditCard, final BindingResult binding) {
 		ModelAndView result;
-		System.out.println(creditCard.getBrandName());
-		if (binding.hasErrors())
-			result = this.createEditModelAndViewBill(creditCard, null);
-		else
-			try {
-
-				this.creditCardService.save(creditCard);
-				result = new ModelAndView("redirect:/welcome/index.do");
-			} catch (final Throwable e) {
-
-				result = this.createEditModelAndViewBill(creditCard, "commit.error");
+		if (binding.hasErrors()) {
+			for (ObjectError e : binding.getAllErrors()) {
+				System.out.println(e.toString());
 			}
 
-		return result;
-	}
+			result = createEditModelAndViewBill(creditCard, null);
+		} else {
+			try {
+				//				Date d1 = new Date();
+				//				Date d2 = new Date();
+				//				d2.setMonth(creditCard.getMonth() - 1);
+				//				d2.setYear((2000 + creditCard.getYear()) - 1900);
+				//				d2.setHours(0);
+				//				d2.setDate(1);
+				//				d2.setMinutes(0);
+				//				d2.setSeconds(0);
 
-	protected ModelAndView createEditModelAndViewBill(final CreditCard creditCard) {
+				creditCardService.save(creditCard);
 
-		ModelAndView result;
-		result = this.createEditModelAndViewBill(creditCard, null);
+				result = new ModelAndView("redirect:/welcome/index.do");
+
+			} catch (Throwable th) {
+				th.printStackTrace();
+				result = createEditModelAndViewBill(creditCard, "actor.commit.error");
+			}
+		}
 		return result;
 	}
 
@@ -77,9 +84,10 @@ public class CreditCardManagerController {
 		ModelAndView result;
 
 		result = new ModelAndView("creditcard/create");
-		result.addObject("creditCard", creditCard);
-		result.addObject("message", message);
 
+		result.addObject("creditCard", creditCard);
+
+		result.addObject("message", message);
 		return result;
 	}
 

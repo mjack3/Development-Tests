@@ -56,8 +56,8 @@ public class AuditWorkRecordController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public ModelAndView edit(@RequestParam int q) {
 		ModelAndView result;
-		WorkRecord workrecord = workRecordService.findOne(q);
-		result = createEditModelAndView(workrecord, null);
+		WorkRecord workRecord = workRecordService.findOne(q);
+		result = createEditModelAndView(workRecord, null);
 
 		return result;
 
@@ -66,31 +66,35 @@ public class AuditWorkRecordController {
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
 		ModelAndView result;
-		WorkRecord workrecord = new WorkRecord();
+		WorkRecord workRecord = new WorkRecord();
 
-		result = createNewModelAndView(workrecord, null);
+		result = createNewModelAndView(workRecord, null);
 
 		return result;
 
 	}
 
 	@RequestMapping(value = "/saveCreate", method = RequestMethod.POST)
-	public ModelAndView saveCreate(@Valid WorkRecord workrecord, BindingResult binding) {
+	public ModelAndView saveCreate(@Valid WorkRecord workRecord, BindingResult binding) {
 		ModelAndView result;
 
 		if (binding.hasErrors()) {
 
-			result = createNewModelAndView(workrecord, null);
+			result = createNewModelAndView(workRecord, null);
 		} else
 
 		{
 			try {
+				if (workRecord.getEndDate().before(workRecord.getStartDate())) {
+					binding.rejectValue("endDate", "error.date", "error");
+					throw new IllegalArgumentException();
 
-				workRecordService.save(workrecord);
+				}
+				workRecordService.save(workRecord);
 				result = new ModelAndView("redirect:/workrecord/auditor/list.do");
 			} catch (Throwable e) {
 
-				result = createNewModelAndView(workrecord, "commit.error");
+				result = createNewModelAndView(workRecord, "commit.error");
 			}
 		}
 
@@ -98,41 +102,46 @@ public class AuditWorkRecordController {
 	}
 
 	@RequestMapping(value = "/saveEdit", method = RequestMethod.POST)
-	public ModelAndView saveEdit(@Valid WorkRecord workrecord, BindingResult binding) {
+	public ModelAndView saveEdit(@Valid WorkRecord workRecord, BindingResult binding) {
 		ModelAndView result;
 
 		if (binding.hasErrors()) {
 
-			result = createEditModelAndView(workrecord, null);
+			result = createEditModelAndView(workRecord, null);
 		} else
 
 		{
 			try {
+				if (workRecord.getEndDate().before(workRecord.getStartDate())) {
+					binding.rejectValue("endDate", "error.date", "error");
+					throw new IllegalArgumentException();
 
-				workRecordService.save(workrecord);
+				}
+
+				workRecordService.save(workRecord);
 				result = new ModelAndView("redirect:/workrecord/auditor/list.do");
 			} catch (Throwable e) {
 				e.printStackTrace();
 
-				result = createEditModelAndView(workrecord, "commit.error");
+				result = createEditModelAndView(workRecord, "commit.error");
 			}
 		}
 
 		return result;
 	}
 
-	protected ModelAndView createNewModelAndView(WorkRecord workrecord, String message) {
+	protected ModelAndView createNewModelAndView(WorkRecord workRecord, String message) {
 		ModelAndView result;
 		result = new ModelAndView("workrecord/create");
-		result.addObject("workrecord", workrecord);
+		result.addObject("workRecord", workRecord);
 		result.addObject("message", message);
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(WorkRecord workrecord, String message) {
+	protected ModelAndView createEditModelAndView(WorkRecord workRecord, String message) {
 		ModelAndView result = new ModelAndView("workrecord/edit");
 
-		result.addObject("workrecord", workrecord);
+		result.addObject("workRecord", workRecord);
 		result.addObject("message", message);
 
 		return result;

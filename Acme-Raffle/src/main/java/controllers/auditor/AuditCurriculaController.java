@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,12 +64,26 @@ public class AuditCurriculaController {
 	public ModelAndView save(@Valid Curricula curricula, BindingResult binding) {
 		ModelAndView result;
 
-		System.out.println(curricula.getName());
+		if (binding.hasErrors()) {
+			for (ObjectError e : binding.getAllErrors()) {
+				System.out.println(e.toString());
+			}
 
-		curriculaService.save(curricula);
-		result = new ModelAndView("redirect:/curricula/auditor/list.do");
+			result = createEditModelAndView(curricula, null);
+		} else {
+			try {
 
+				curriculaService.save(curricula);
+
+				result = new ModelAndView("redirect:/curricula/auditor/list.do");
+
+			} catch (Throwable th) {
+				th.printStackTrace();
+				result = createEditModelAndView(curricula, "actor.commit.error");
+			}
+		}
 		return result;
+
 	}
 
 	@RequestMapping(value = "/generate", method = RequestMethod.GET)

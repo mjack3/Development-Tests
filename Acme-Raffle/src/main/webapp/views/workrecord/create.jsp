@@ -12,7 +12,7 @@
 
 
 
-<form:form action="workrecord/auditor/saveCreate.do" modelAttribute="workrecord">
+<form:form action="workrecord/auditor/saveCreate.do" modelAttribute="workRecord">
 
 		<form:hidden path="id" />
 		<form:hidden path="version" />

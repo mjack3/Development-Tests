@@ -22,8 +22,8 @@
 		<!--<bean class="converters.AuthorityToStringConverter" />-->
 		
 		
-		<bean class="converters.AuthorityToStringConverter" />
-		<bean class="converters.StringToAuthorityConverter" />
+		<!--  <bean class="converters.AuthorityToStringConverter" />-->
+		<!-- <bean class="converters.StringToAuthorityConverter" />-->
 		
 		<bean class="converters.UserToStringConverter" />
 		<bean class="converters.StringToUserConverter" />

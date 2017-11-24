@@ -12,12 +12,12 @@
 <h1><spring:message code="user.winners"></spring:message></h1>
  <jstl:forEach var="e" items="${user}">
 <table class="table">
-    <jstl:if test="${!e.prizes.isEmpty()}">
+   
      <tr>
-      <td> <jstl:out value="${e.name}">:</jstl:out>: <spring:message code="user.prize"/> <jstl:out value="${e.prizes}"></jstl:out>
+      <td> <jstl:out value="${s}">:</jstl:out>: <spring:message code="user.prize"/> <jstl:out value="${e.prizes}"></jstl:out>
        </td>
      </tr>
-     </jstl:if>
+   
    </table>
  
  <tr>

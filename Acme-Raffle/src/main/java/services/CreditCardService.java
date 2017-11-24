@@ -43,7 +43,7 @@ public class CreditCardService {
 		CreditCard aux = new CreditCard();
 		Manager manager = (Manager) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
 
-		Assert.isTrue((entity.getMonth() - today.getMonth() != 1) && today.getDate() + 7 < 32 && today.getYear() - entity.getYear() != 0);
+		//Assert.isTrue((entity.getMonth() - today.getMonth() != 1) && today.getDate() + 7 < 32 && today.getYear() - entity.getYear() != 0);
 		aux = creditCardRepository.save(entity);
 		manager.setCreditCard(aux);
 

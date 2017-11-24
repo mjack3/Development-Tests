@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import security.LoginService;
-import services.BillService;
 import domain.Bill;
 import domain.Manager;
 import domain.Raffle;
+import security.LoginService;
+import services.BillService;
 
 @RequestMapping("/bill/manager/")
 @Controller
@@ -40,6 +40,7 @@ public class BillManagerController {
 		result.addObject("requestURI", "/bill/manager/list.do");
 		result.addObject("bill", bills);
 		result.addObject("creditCard", manager.getCreditCard());
+		result.addObject("today", new Date());
 		return result;
 	}
 

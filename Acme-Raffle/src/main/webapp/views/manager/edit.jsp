@@ -26,7 +26,7 @@
 		<form:hidden path="userAccount.password" />
 		<form:hidden path="userAccount.authorities" />
 		<form:hidden path="userAccount.banned" />
-		<form:hidden path="isDebtor" />
+		<form:hidden path="isDebtor"/>
 		<form:hidden path="creditCard" />
 
 
@@ -62,6 +62,14 @@
 		<label> <spring:message code="mana.country"/> </label><br />
 		<input class="form-control" value="${manager.country}" type="text" name="country"/>
 		<form:errors cssClass="error" path="country" /> <br />
+		<jstl:choose>
+		<jstl:when test="${manager.creditCard==null}">
+		<li><a href="creditcard/manager/create.do"><spring:message code="master.page.creditcard.manager"></spring:message></a></li>
+		</jstl:when>
+		<jstl:otherwise>
+		<li><a href="creditcard/manager/display.do"><spring:message code="master.page.creditcard.display"></spring:message></a></li>									 
+		</jstl:otherwise>
+		</jstl:choose>
 		
 		</div>
 		

@@ -82,14 +82,7 @@
 								<li><a href="raffle/managers/list.do"><spring:message code="master.page.raffles.manager"></spring:message></a></li>
 								
 								
-								<jstl:choose>
-									<jstl:when test="${sw }">
-										<li><a href="creditcard/manager/create.do"><spring:message code="master.page.creditcard.manager"></spring:message></a></li>
-									</jstl:when>
-									<jstl:otherwise>
-										<li><a href="creditcard/manager/display.do"><spring:message code="master.page.creditcard.display"></spring:message></a></li>									 
-									</jstl:otherwise>
-								</jstl:choose>
+								
 								
 								<li><a href="bill/manager/list.do"><spring:message code="master.page.bill.list" /></a></li>
 							</security:authorize>
