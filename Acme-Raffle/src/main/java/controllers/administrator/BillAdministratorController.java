@@ -92,10 +92,20 @@ public class BillAdministratorController extends AbstractController {
 
 		//	Comprobamos que la fecha no está en el histórico
 
-		else if (configuration.getHistoric().contains(string)) {
-			bindingResult.rejectValue("month", "error.month", "invalid");
-			bindingResult.rejectValue("year", "year.error", "invalid");
-			throw new IllegalArgumentException();
+		for (final String historicString : configuration.getHistoric()) {
+
+			final String[] part = historicString.split("/");
+			final int month = new Integer(part[0]);
+			final int year = new Integer(part[1]);
+
+			final Date dateHistoric = new Date(year - 1900, month - 1, 1, 0, 0, 0);
+			final Date dateForm = new Date(configuration.getYear() - 1900, configuration.getMonth() - 1, 1, 0, 0, 0);
+
+			if (dateForm.equals(dateHistoric) || dateForm.before(dateHistoric)) {
+				bindingResult.rejectValue("month", "year.errorEs", "invalid");
+				bindingResult.rejectValue("year", "year.errorEs", "invalid");
+				throw new IllegalArgumentException();
+			}
 		}
 
 		//	Comprobamos que hay rifas para dicha fecha generar
