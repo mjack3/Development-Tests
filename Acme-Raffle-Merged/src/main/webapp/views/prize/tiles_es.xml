@@ -45,4 +45,8 @@
 		<put-attribute name="title" value="Salon de Fama" />
 		<put-attribute name="body" value="/views/prize/halfoffame.jsp" />
 	</definition>
+	<definition name="prize/avgStar" extends="master.page">
+		<put-attribute name="title" value="Media Estrellas" />
+		<put-attribute name="body" value="/views/prize/avgStar.jsp" />
+	</definition>
 </tiles-definitions>

@@ -53,7 +53,7 @@ public class CommentController {
 	@Autowired
 	private UserService				userService;
 	@Autowired
-	private TabooWordService				tabooWordService;
+	private TabooWordService		tabooWordService;
 
 	@Autowired
 	private AdministratorService	administratorService;
@@ -74,55 +74,49 @@ public class CommentController {
 		result = new ModelAndView("comment/list");
 		List<Comment> commets = new LinkedList<Comment>();
 		if (auditor != null)
-			commets=auditor.getComments();
+			commets = auditor.getComments();
 		if (manager != null)
-			commets=manager.getComments();
+			commets = manager.getComments();
 		if (user != null)
-			commets=user.getComments();
+			commets = user.getComments();
 		if (admin != null)
-			commets=admin.getComments();
+			commets = admin.getComments();
 		if (raffle != null)
-			commets=raffle.getComments();
+			commets = raffle.getComments();
 		if (prize != null)
-			commets=prize.getComments();
+			commets = prize.getComments();
 
-		commets= hiddenTabooWords(commets);
+		commets = this.hiddenTabooWords(commets);
 		result.addObject("comments", commets);
 		result.addObject("requestURI", "comment/list.do");
 		return result;
 	}
 
-	private List<Comment> hiddenTabooWords(List<Comment> comments) {
-		List<Comment> res = new LinkedList<>();
-		
-		for(TabooWord t: tabooWordService.findAll()) {
-			for(Comment c: comments) {
-				if(c.getText().contains(t.getName())) {
+	private List<Comment> hiddenTabooWords(final List<Comment> comments) {
+		final List<Comment> res = new LinkedList<>();
+
+		for (final TabooWord t : this.tabooWordService.findAll())
+			for (final Comment c : comments) {
+				if (c.getText().contains(t.getName())) {
 					String text = "";
-					String[] words=c.getText().split(" ");
+					final String[] words = c.getText().split(" ");
 					String chars = "";
-					for(int i = 0; i<t.getName().length();i++) {
+					for (int i = 0; i < t.getName().length(); i++)
 						chars = chars + "*";
-					}
-					
-					for(String w: words) {
-						if(w.equalsIgnoreCase(t.getName())) {
-							text+=chars+" ";
-						}else {
-							text+=w+" ";
-						}
-					}
+
+					for (final String w : words)
+						if (w.equalsIgnoreCase(t.getName()))
+							text += chars + " ";
+						else
+							text += w + " ";
 					c.setText(text);
 				}
-				if(!res.contains(c))
+				if (!res.contains(c))
 					res.add(c);
 			}
-		}
-		
-		
+
 		return res;
 	}
-	
 
 	@RequestMapping(value = "/createOnRaffle", method = RequestMethod.GET)
 	public ModelAndView createOnRaffle(@RequestParam final int raffleId) {
@@ -206,6 +200,37 @@ public class CommentController {
 		resul.addObject("actionParam", "comment/edit.do");
 
 		return resul;
+	}
+
+	//AVGS
+	@RequestMapping(value = "/avgactor/view", method = RequestMethod.GET)
+	public ModelAndView avgsactor(@RequestParam final Integer q) {
+		final ModelAndView result = new ModelAndView("actor/avgStar");
+
+		result.addObject("avgStar", this.actorService.avgStarCommentsActor(q));
+
+		return result;
+	}
+
+	@RequestMapping(value = "/avgraffle/view", method = RequestMethod.GET)
+	public ModelAndView avgsraffle(@RequestParam final Integer q) {
+		final ModelAndView result = new ModelAndView("raffle/avgStar");
+
+		result.addObject("avgStar", this.raffleService.avgStarCommentsRaffle(q));
+
+		return result;
+	}
+
+	@RequestMapping(value = "/avgprize/view", method = RequestMethod.GET)
+	public ModelAndView avgsprize(@RequestParam final Integer q) {
+		ModelAndView result = new ModelAndView("prize/avgStar");
+		try {
+			result.addObject("avgStar", this.prizeService.avgStarCommentsPrize(q));
+		} catch (final Throwable e) {
+			result = new ModelAndView("redirect:/welcome/index.do");
+		}
+
+		return result;
 	}
 
 }

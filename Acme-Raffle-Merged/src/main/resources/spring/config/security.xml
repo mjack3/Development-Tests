@@ -42,7 +42,7 @@
 
 		<!-- SECURITY: AUTHENTICATED -->
 		<security:intercept-url pattern="/socialidentity/actor/edit.do"
-			access="isAuthenticated()" />
+			access="permitAll()" />
 		<security:intercept-url pattern="/socialidentity/actor/list.do"
 			access="isAuthenticated()" />
 		<security:intercept-url pattern="/socialidentity/actor/save.do"
@@ -55,9 +55,7 @@
 			access="isAuthenticated()" />
 		<security:intercept-url pattern="/comment/**"
 			access="permitAll()" />
-		<security:intercept-url pattern="/actor/list.do"
-			access="isAuthenticated()" />
-
+	
 		<!-- SECURITY: USER -->
 		<security:intercept-url pattern="/user/edit.do"
 			access="hasRole('USER')" />
@@ -200,8 +198,10 @@
 		<security:intercept-url pattern="/prize/halfoffame.do"
 			access="permitAll()" />
 
-
-
+		<security:intercept-url pattern="/comment/avgactor/view.do" access="permitAll" />
+   		<security:intercept-url pattern="/comment/avgprize/view.do" access="permitAll" />
+   		<security:intercept-url pattern="/comment/avgraffle/view.do" access="permitAll" />
+	<security:intercept-url pattern="/actor/list.do" access="permitAll()" />
 
 
 

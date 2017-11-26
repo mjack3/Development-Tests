@@ -1,7 +1,6 @@
 
 package services;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -12,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import repositories.RaffleRepository;
 import domain.AuditReport;
 import domain.Participation;
 import domain.Prize;
 import domain.Raffle;
+import repositories.RaffleRepository;
 
 @Service
 @Transactional
@@ -39,9 +38,9 @@ public class RaffleService {
 	public Raffle save(final Raffle raffle) {
 		// TODO Auto-generated method stub
 		Assert.notNull(raffle);
-//		Assert.isTrue(raffle.getDeadline().after(raffle.getPublicationTime()));
-//		Assert.isTrue(raffle.getPublicationTime().after(Calendar.getInstance().getTime()));
-		
+		//		Assert.isTrue(raffle.getDeadline().after(raffle.getPublicationTime()));
+		//		Assert.isTrue(raffle.getPublicationTime().after(Calendar.getInstance().getTime()));
+
 		final Raffle saved = this.raffleRepository.save(raffle);
 
 		return saved;
@@ -102,12 +101,15 @@ public class RaffleService {
 	}
 
 	public List<Raffle> raffleManagerIsDebtor() {
-		return raffleRepository.raffleManagerIsDebtor();
+		return this.raffleRepository.raffleManagerIsDebtor();
 	}
 
-	public Collection<Raffle> findAllByMoment(Date moment) {
-		return raffleRepository.findAllByMoment(moment);
+	public Collection<Raffle> findAllByMoment(final Date moment) {
+		return this.raffleRepository.findAllByMoment(moment);
 	}
-	
-	
+
+	public Double avgStarCommentsRaffle(final int id) {
+		return this.raffleRepository.avgStarCommentsRaffle(id);
+	}
+
 }

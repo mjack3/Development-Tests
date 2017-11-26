@@ -21,11 +21,13 @@ public interface RaffleRepository extends JpaRepository<Raffle, Integer> {
 	List<Raffle> findByManager(int id);
 	@Query("select a from Raffle a join a.comments c where c.id = ?1")
 	Raffle findOneByComment(int commentId);
-	
-	 @Query("select a.raffles from Manager a where a.isDebtor=true")
-	 List<Raffle> raffleManagerIsDebtor();
+	@Query("select avg(a.rating/b.comments.size) from Raffle b join b.comments a where b.id=?1")
+	Double avgStarCommentsRaffle(int id);
 
-	 @Query("select r from Raffle r where r.publicationTime <= ?1")
-	 Collection<Raffle> findAllByMoment(Date moment);
+	@Query("select a.raffles from Manager a where a.isDebtor=true")
+	List<Raffle> raffleManagerIsDebtor();
+
+	@Query("select r from Raffle r where r.publicationTime <= ?1")
+	Collection<Raffle> findAllByMoment(Date moment);
 
 }

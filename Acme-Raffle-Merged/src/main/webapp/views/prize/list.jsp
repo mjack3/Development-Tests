@@ -57,12 +57,18 @@
 </display:column>
 </security:authorize>
 
+<display:column>
+<jstl:if test="${not empty row.comments }">
+	<a href="comment/avgprize/view.do?q=${row.id}"> <spring:message code="actor.star" /> </a>
+	</jstl:if>
+</display:column>
 
 
 <security:authorize access="permitAll()">
 <display:column>
 <jstl:if test="${not empty row.comments }">
 	<a href="comment/list.do?q=${row.id }"> <spring:message code="comment.action.list" /> </a>
+	
 </jstl:if>
 </display:column>
 </security:authorize>

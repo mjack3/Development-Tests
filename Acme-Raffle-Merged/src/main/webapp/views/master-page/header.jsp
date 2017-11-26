@@ -61,6 +61,7 @@
 					</security:authorize>
 					
 					<security:authorize access="permitAll()">
+					<li><a href="actor/list.do"><spring:message code="master.page.actors"></spring:message></a></li>
 					
 						<li><a href="raffle/list.do"><spring:message code="master.page.raffles"></spring:message></a></li>
 					</security:authorize>
