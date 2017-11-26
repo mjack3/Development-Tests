@@ -27,4 +27,15 @@
 
  
  <h1><spring:message code="user.75"></spring:message></h1>
+ <table class="table">
+   	<jstl:forEach items="${user075}" var="a">
+   	
+     <tr>
+      <td> <jstl:out value="${a.name}">:</jstl:out>
+       </td>
+     </tr>
+   </jstl:forEach>
+
+   </table>
+ 
  

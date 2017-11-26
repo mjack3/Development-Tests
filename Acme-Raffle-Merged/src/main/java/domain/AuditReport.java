@@ -32,6 +32,7 @@ public class AuditReport extends DomainEntity {
 
 
 	@NotBlank
+	@NotNull
 	public String getText() {
 		return this.text;
 	}

@@ -98,6 +98,10 @@
 								<li><a href="auditor/administrator/create.do"><spring:message
 											code="master.page.administrator.auditor" /> </a></li>
 											<li><a href="curricula/auditor/administrator/list.do"><spring:message code="master.page.auditor.curricula.list" /></a></li>
+									<li><a href="mana/administrator/list.do"><spring:message
+											code="master.page.administrator.mana" /> </a></li>	
+									<li><a href="bill/administrator/generate.do"><spring:message
+											code="master.page.administrator.generate" /> </a></li>			
 											
 								<li class="dropdown"><a href="#" class="dropdown-toggle"
 							data-toggle="dropdown" role="button" aria-haspopup="true"

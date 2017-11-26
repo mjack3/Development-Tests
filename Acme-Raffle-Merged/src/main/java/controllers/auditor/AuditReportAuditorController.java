@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import security.LoginService;
-import services.AuditReportService;
-import services.AuditorService;
 import domain.AuditReport;
 import domain.Auditor;
 import domain.Raffle;
+import security.LoginService;
+import services.AuditReportService;
+import services.AuditorService;
 
 @Controller
 @RequestMapping("/auditReport/auditor")
@@ -69,7 +69,7 @@ public class AuditReportAuditorController {
 		auditReport.setMoment(new Date(System.currentTimeMillis() - 1));
 		auditReport.setRaffle(q);
 
-		res.addObject("auditreport", auditReport);
+		res.addObject("auditReport", auditReport);
 		this.toSave = q;
 
 		return res;
@@ -87,20 +87,21 @@ public class AuditReportAuditorController {
 			res.addObject("message", "error.edit.report");
 
 		}
-		res.addObject("auditreport", auditReport);
+
+		res.addObject("auditReport", auditReport);
 
 		return res;
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public ModelAndView save(@Valid final AuditReport auditreport, final BindingResult binding) {
+	public ModelAndView save(@Valid final AuditReport auditReport, final BindingResult binding) {
 		ModelAndView res;
 
 		res = new ModelAndView("auditReport/create");
 
 		if (binding.hasErrors()) {
 			res = new ModelAndView("auditReport/create");
-			res.addObject("auditReport", auditreport);
+			res.addObject("auditReport", auditReport);
 			res.addObject("message", "commit.error");
 		} else
 			try {
@@ -108,11 +109,11 @@ public class AuditReportAuditorController {
 				//auditreport = this.auditReportService.reconstruct(auditreport, binding);
 
 				//auditreport.setRaffle(this.toSave);
-				this.auditReportService.save(auditreport);
+				this.auditReportService.save(auditReport);
 				return this.list();
 			} catch (final Exception e) {
 				res = new ModelAndView("auditReport/create");
-				res.addObject("auditReport", auditreport);
+				res.addObject("auditReport", auditReport);
 				res.addObject("message", "commit.error");
 			}
 
@@ -120,24 +121,25 @@ public class AuditReportAuditorController {
 	}
 
 	@RequestMapping(value = "/saveEdit", method = RequestMethod.POST)
-	public ModelAndView saveEdit(final @Valid AuditReport auditreport, final BindingResult binding) {
+	public ModelAndView saveEdit(final @Valid AuditReport auditReport, final BindingResult binding) {
 		ModelAndView res;
 
 		res = new ModelAndView("auditReport/edit");
-		if (auditreport.getFinalMode() == null)
-			auditreport.setFinalMode(false);
+		if (auditReport.getFinalMode() == null)
+			auditReport.setFinalMode(false);
 
 		if (binding.hasErrors()) {
 			res = new ModelAndView("auditReport/edit");
-			res.addObject("auditReport", auditreport);
+			res.addObject("auditReport", auditReport);
 			res.addObject("message", "commit.error");
 		} else
 			try {
-				this.auditReportService.update(auditreport);
+
+				this.auditReportService.update(auditReport);
 				return this.list();
 			} catch (final Exception e) {
 				res = new ModelAndView("auditReport/edit");
-				res.addObject("auditReport", auditreport);
+				res.addObject("auditReport", auditReport);
 				res.addObject("message", "commit.error");
 			}
 

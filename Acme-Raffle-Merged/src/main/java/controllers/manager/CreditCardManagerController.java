@@ -1,6 +1,8 @@
 
 package controllers.manager;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +33,9 @@ public class CreditCardManagerController {
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
 
-		CreditCard creditCard = new CreditCard();
+		final CreditCard creditCard = new CreditCard();
 
-		ModelAndView resul = createEditModelAndViewBill(creditCard, null);
+		final ModelAndView resul = this.createEditModelAndViewBill(creditCard, null);
 
 		return resul;
 	}
@@ -48,34 +50,38 @@ public class CreditCardManagerController {
 		return resul;
 	}
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public ModelAndView save(@Valid CreditCard creditCard, final BindingResult binding) {
+	public ModelAndView save(@Valid final CreditCard creditCard, final BindingResult binding) {
 		ModelAndView result;
 		if (binding.hasErrors()) {
-			for (ObjectError e : binding.getAllErrors()) {
+			for (final ObjectError e : binding.getAllErrors())
 				System.out.println(e.toString());
-			}
 
-			result = createEditModelAndViewBill(creditCard, null);
-		} else {
+			result = this.createEditModelAndViewBill(creditCard, null);
+		} else
 			try {
-				//				Date d1 = new Date();
-				//				Date d2 = new Date();
-				//				d2.setMonth(creditCard.getMonth() - 1);
-				//				d2.setYear((2000 + creditCard.getYear()) - 1900);
-				//				d2.setHours(0);
-				//				d2.setDate(1);
-				//				d2.setMinutes(0);
-				//				d2.setSeconds(0);
+				//Probar que caduca en 7 dias
+				final Date d1 = new Date();
+				System.out.println(d1.getYear());
+				System.out.println((2000 + creditCard.getYear()) - 1900);
+				System.out.println(d1.getMonth() - creditCard.getMonth() <= 1);
+				System.out.println(d1.getDate() + 7 > 31);
+				if (creditCard.getMonth() < d1.getMonth() && (2000 + creditCard.getYear() - 1900) - d1.getYear() == 0) {
+					binding.rejectValue("month", "creditcard.month.novalid", "error");
+					throw new IllegalArgumentException();
+				}
+				if ((2000 + creditCard.getYear() - 1900) - d1.getYear() == 0 && d1.getMonth() - creditCard.getMonth() <= 1 && d1.getDate() + 7 > 31) {
+					binding.rejectValue("year", "creditcard.deadlineError", "error");
+					throw new IllegalArgumentException();
+				}
 
-				creditCardService.save(creditCard);
+				this.creditCardService.save(creditCard);
 
 				result = new ModelAndView("redirect:/welcome/index.do");
 
-			} catch (Throwable th) {
+			} catch (final Throwable th) {
 				th.printStackTrace();
-				result = createEditModelAndViewBill(creditCard, "actor.commit.error");
+				result = this.createEditModelAndViewBill(creditCard, "actor.commit.error");
 			}
-		}
 		return result;
 	}
 

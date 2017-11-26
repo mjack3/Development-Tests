@@ -18,7 +18,7 @@
 
 	<definition name="bill/list" extends="master.page">
 		<put-attribute name="title" value="Lista de Facturas" />
-		<put-attribute name="body" value="/views/creditcard/create.jsp" />
+		<put-attribute name="body" value="/views/bill/list.jsp" />
 	</definition>
 	
 	<definition name="bill/generate" extends="master.page">

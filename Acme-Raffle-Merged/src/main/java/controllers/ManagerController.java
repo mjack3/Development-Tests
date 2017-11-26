@@ -5,13 +5,16 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import domain.Manager;
+import services.AdministratorService;
 import services.ManagerService;
 import utilities.Validator;
 
@@ -20,7 +23,9 @@ import utilities.Validator;
 public class ManagerController extends AbstractController {
 
 	@Autowired
-	private ManagerService	managerService;
+	private ManagerService			managerService;
+	@Autowired
+	private AdministratorService	administratorService;
 
 
 	public ManagerController() {
@@ -82,7 +87,7 @@ public class ManagerController extends AbstractController {
 
 		return result;
 	}
-	
+
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public ModelAndView edit(final int userAccountID) {
 		ModelAndView result;
@@ -108,7 +113,7 @@ public class ManagerController extends AbstractController {
 					binding.rejectValue("phone", "error.phone", "error");
 					throw new IllegalArgumentException();
 				}
-				
+
 				this.managerService.save(mana);
 				result = new ModelAndView("redirect:/welcome/index.do");
 			} catch (final Throwable th) {
@@ -136,4 +141,52 @@ public class ManagerController extends AbstractController {
 		return result;
 	}
 
+	//2.0
+	@RequestMapping(value = "/administrator/list", method = RequestMethod.GET)
+	public ModelAndView listDebtor() {
+		ModelAndView result;
+		result = new ModelAndView("mana/list");
+
+		result.addObject("manager", this.managerService.isDebtors());
+
+		return result;
+	}
+
+	@RequestMapping(value = "/administrator/banned", method = RequestMethod.GET)
+	public ModelAndView banned(@RequestParam final int q) {
+		Assert.notNull(q);
+		ModelAndView result;
+		final Manager manager = this.managerService.findOne(q);
+
+		try {
+			this.administratorService.bannedManager(manager);
+
+			result = new ModelAndView("redirect:/mana/administrator/list.do");
+		} catch (final Throwable th) {
+			result = new ModelAndView("redirect:/mana/administrator/list.do");
+			result.addObject("message", "commit.error");
+		}
+
+		return result;
+
+	}
+
+	@RequestMapping(value = "/administrator/desbanned", method = RequestMethod.GET)
+	public ModelAndView readmit(@RequestParam final int q) {
+		Assert.notNull(q);
+		ModelAndView result;
+		final Manager manager = this.managerService.findOne(q);
+
+		try {
+			this.administratorService.DisbannedManager(manager);
+
+			result = new ModelAndView("redirect:/mana/administrator/list.do");
+		} catch (final Throwable th) {
+			result = new ModelAndView("redirect:/mana/administrator/list.do");
+			result.addObject("message", "commit.error");
+		}
+
+		return result;
+
+	}
 }

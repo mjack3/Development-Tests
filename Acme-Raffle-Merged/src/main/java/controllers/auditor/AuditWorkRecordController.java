@@ -1,6 +1,8 @@
 
 package controllers.auditor;
 
+import java.util.Date;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ public class AuditWorkRecordController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list() {
 		ModelAndView result;
-		Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		final Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
 
 		result = new ModelAndView("workrecord/list");
 		result.addObject("requestURI", "workrecord/auditor/list.do");
@@ -43,7 +45,7 @@ public class AuditWorkRecordController {
 	@RequestMapping(value = "/auditregister/view", method = RequestMethod.GET)
 	public ModelAndView listRegister() {
 		ModelAndView result;
-		Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		final Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
 
 		result = new ModelAndView("workrecord/view");
 
@@ -54,10 +56,10 @@ public class AuditWorkRecordController {
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public ModelAndView edit(@RequestParam int q) {
+	public ModelAndView edit(@RequestParam final int q) {
 		ModelAndView result;
-		WorkRecord workRecord = workRecordService.findOne(q);
-		result = createEditModelAndView(workRecord, null);
+		final WorkRecord workRecord = this.workRecordService.findOne(q);
+		result = this.createEditModelAndView(workRecord, null);
 
 		return result;
 
@@ -66,71 +68,81 @@ public class AuditWorkRecordController {
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
 		ModelAndView result;
-		WorkRecord workRecord = new WorkRecord();
+		final WorkRecord workRecord = new WorkRecord();
 
-		result = createNewModelAndView(workRecord, null);
+		result = this.createNewModelAndView(workRecord, null);
 
 		return result;
 
 	}
 
 	@RequestMapping(value = "/saveCreate", method = RequestMethod.POST)
-	public ModelAndView saveCreate(@Valid WorkRecord workRecord, BindingResult binding) {
+	public ModelAndView saveCreate(@Valid final WorkRecord workRecord, final BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors()) {
-
-			result = createNewModelAndView(workRecord, null);
-		} else
-
-		{
+		if (binding.hasErrors())
+			result = this.createNewModelAndView(workRecord, null);
+		else
 			try {
-				if (workRecord.getEndDate().before(workRecord.getStartDate())) {
-					binding.rejectValue("endDate", "error.date", "error");
-					throw new IllegalArgumentException();
 
+				if (workRecord.getEndDate() != null) {
+					if (workRecord.getEndDate().before(workRecord.getStartDate())) {
+						binding.rejectValue("endDate", "error.date", "error");
+						throw new IllegalArgumentException();
+
+					}
+
+					if (workRecord.getEndDate().after(new Date())) {
+						binding.rejectValue("endDate", "error.date.future", "error");
+						throw new IllegalArgumentException();
+
+					}
 				}
-				workRecordService.save(workRecord);
-				result = new ModelAndView("redirect:/workrecord/auditor/list.do");
-			} catch (Throwable e) {
 
-				result = createNewModelAndView(workRecord, "commit.error");
+				this.workRecordService.save(workRecord);
+				result = new ModelAndView("redirect:/workrecord/auditor/list.do");
+			} catch (final Throwable e) {
+
+				result = this.createNewModelAndView(workRecord, "commit.error");
 			}
-		}
 
 		return result;
 	}
 
 	@RequestMapping(value = "/saveEdit", method = RequestMethod.POST)
-	public ModelAndView saveEdit(@Valid WorkRecord workRecord, BindingResult binding) {
+	public ModelAndView saveEdit(@Valid final WorkRecord workRecord, final BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors()) {
-
-			result = createEditModelAndView(workRecord, null);
-		} else
-
-		{
+		if (binding.hasErrors())
+			result = this.createEditModelAndView(workRecord, null);
+		else
 			try {
-				if (workRecord.getEndDate().before(workRecord.getStartDate())) {
-					binding.rejectValue("endDate", "error.date", "error");
-					throw new IllegalArgumentException();
+				if (workRecord.getEndDate() != null) {
+					if (workRecord.getEndDate().before(workRecord.getStartDate())) {
+						binding.rejectValue("endDate", "error.date", "error");
+						throw new IllegalArgumentException();
 
+					}
+
+					if (workRecord.getEndDate().after(new Date())) {
+						binding.rejectValue("endDate", "error.date.future", "error");
+						throw new IllegalArgumentException();
+
+					}
 				}
 
-				workRecordService.save(workRecord);
+				this.workRecordService.save(workRecord);
 				result = new ModelAndView("redirect:/workrecord/auditor/list.do");
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				e.printStackTrace();
 
-				result = createEditModelAndView(workRecord, "commit.error");
+				result = this.createEditModelAndView(workRecord, "commit.error");
 			}
-		}
 
 		return result;
 	}
 
-	protected ModelAndView createNewModelAndView(WorkRecord workRecord, String message) {
+	protected ModelAndView createNewModelAndView(final WorkRecord workRecord, final String message) {
 		ModelAndView result;
 		result = new ModelAndView("workrecord/create");
 		result.addObject("workRecord", workRecord);
@@ -138,8 +150,8 @@ public class AuditWorkRecordController {
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(WorkRecord workRecord, String message) {
-		ModelAndView result = new ModelAndView("workrecord/edit");
+	protected ModelAndView createEditModelAndView(final WorkRecord workRecord, final String message) {
+		final ModelAndView result = new ModelAndView("workrecord/edit");
 
 		result.addObject("workRecord", workRecord);
 		result.addObject("message", message);

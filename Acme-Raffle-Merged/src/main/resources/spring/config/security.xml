@@ -184,8 +184,7 @@
 		<security:intercept-url pattern="/bill/administrator/generate.do"
 			access="hasRole('ADMIN')" />
 
-		<security:intercept-url pattern="/property/manager/**"
-			access="hasRole('MANAGER')" />
+		
 		<security:intercept-url pattern="/creditcard/manager/**"
 			access="hasRole('MANAGER')" />
 		<security:intercept-url pattern="/mana/administrator/view.do"

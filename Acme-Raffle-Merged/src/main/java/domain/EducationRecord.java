@@ -11,7 +11,6 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Before;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,19 +31,19 @@ public class EducationRecord extends DomainEntity {
 
 	@NotBlank
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(final String title) {
 		this.title = title;
 	}
 
 	@NotNull
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -54,21 +53,20 @@ public class EducationRecord extends DomainEntity {
 	@Past
 	@Before(value = "endDate")
 	public Date getStartDate() {
-		return startDate;
+		return this.startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(final Date startDate) {
 		this.startDate = startDate;
 	}
 
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@After(value = "startDate")
 	public Date getEndDate() {
-		return endDate;
+		return this.endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(final Date endDate) {
 		this.endDate = endDate;
 	}
 
