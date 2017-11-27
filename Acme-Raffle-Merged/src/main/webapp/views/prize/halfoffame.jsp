@@ -13,13 +13,12 @@
 
 <table class="table">
    	<jstl:forEach items="${user}" var="a">
-   	<jstl:forEach items="${prize}" var="b">
+   	
      <tr>
-      <td> <jstl:out value="${a.name}">:</jstl:out>: <spring:message code="user.prize"/> <jstl:out value="${b.name}"></jstl:out>
-       </td>
+      <td> <jstl:out value="${a.name}">:</jstl:out>
      </tr>
    </jstl:forEach>
-   </jstl:forEach>
+
    </table>
  
 

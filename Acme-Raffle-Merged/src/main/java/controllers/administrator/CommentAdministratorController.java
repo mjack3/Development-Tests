@@ -37,7 +37,7 @@ public class CommentAdministratorController extends AbstractController {
 		final ModelAndView resul = new ModelAndView("comment/list");
 
 		List<Comment> comments = this.commentService.findAll();
-		comments=hiddenTabooWords(comments);
+		comments = this.hiddenTabooWords(comments);
 		resul.addObject("comments", comments);
 		resul.addObject("requestURI", "comment/administrator/list.do");
 		return resul;
@@ -48,39 +48,34 @@ public class CommentAdministratorController extends AbstractController {
 		final ModelAndView resul = new ModelAndView("comment/list");
 
 		List<Comment> comments = (List<Comment>) this.commentService.findAllInapropiate();
-		comments = hiddenTabooWords(comments);
+		comments = this.hiddenTabooWords(comments);
 		resul.addObject("comments", comments);
 		return resul;
 	}
-	
-	private List<Comment> hiddenTabooWords(List<Comment> comments) {
-		List<Comment> res = new LinkedList<>();
-		
-		for(TabooWord t: tabooWordService.findAll()) {
-			for(Comment c: comments) {
-				if(c.getText().contains(t.getName())) {
+
+	private List<Comment> hiddenTabooWords(final List<Comment> comments) {
+		final List<Comment> res = new LinkedList<>();
+
+		for (final TabooWord t : this.tabooWordService.findAll())
+			for (final Comment c : comments) {
+				if (c.getText().contains(t.getName())) {
 					String text = "";
-					String[] words=c.getText().split(" ");
+					final String[] words = c.getText().split(" ");
 					String chars = "";
-					for(int i = 0; i<t.getName().length();i++) {
+					for (int i = 0; i < t.getName().length(); i++)
 						chars = chars + "*";
-					}
-					
-					for(String w: words) {
-						if(w.equalsIgnoreCase(t.getName())) {
-							text+=chars+" ";
-						}else {
-							text+=w+" ";
-						}
-					}
+
+					for (final String w : words)
+						if (w.equalsIgnoreCase(t.getName()))
+							text += chars + " ";
+						else
+							text += w + " ";
 					c.setText(text);
 				}
-				if(!res.contains(c))
+				if (!res.contains(c))
 					res.add(c);
 			}
-		}
-		
-		
+
 		return res;
 	}
 
@@ -90,6 +85,7 @@ public class CommentAdministratorController extends AbstractController {
 		ModelAndView resul;
 
 		try {
+
 			this.commentService.delete(commentId);
 			resul = this.list();
 

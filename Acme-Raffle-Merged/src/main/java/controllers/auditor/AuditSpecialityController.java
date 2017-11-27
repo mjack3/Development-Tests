@@ -5,6 +5,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import domain.Auditor;
 import domain.Speciality;
 import security.LoginService;
+import services.AuditorService;
 import services.SpecialityService;
 
 @Controller
@@ -25,12 +27,14 @@ public class AuditSpecialityController {
 	private SpecialityService	specialityService;
 	@Autowired
 	private LoginService		loginService;
+	@Autowired
+	private AuditorService		auditorService;
 
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list() {
 		ModelAndView result;
-		Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		final Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
 
 		result = new ModelAndView("speciality/list");
 		result.addObject("requestURI", "speciality/auditor/list.do");
@@ -42,10 +46,16 @@ public class AuditSpecialityController {
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public ModelAndView edit(@RequestParam int q) {
+	public ModelAndView edit(@RequestParam final int q) {
 		ModelAndView result;
-		Speciality speciality = specialityService.findOne(q);
-		result = createEditModelAndView(speciality, null);
+		try {
+			final Speciality speciality = this.specialityService.findOne(q);
+			final Auditor auditor = this.auditorService.findOneUserAccount(LoginService.getPrincipal().getId());
+			Assert.isTrue(auditor.getCurricula().getSpecialities().contains(speciality));
+			result = this.createEditModelAndView(speciality, null);
+		} catch (final Throwable e) {
+			result = new ModelAndView("redirect:/welcome/index.do");
+		}
 
 		return result;
 
@@ -54,60 +64,52 @@ public class AuditSpecialityController {
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView create() {
 		ModelAndView result;
-		Speciality speciality = specialityService.create();
+		final Speciality speciality = this.specialityService.create();
 
-		result = createCreateModelAndView(speciality, null);
+		result = this.createCreateModelAndView(speciality, null);
 
 		return result;
 
 	}
 
 	@RequestMapping(value = "/saveCreate", method = RequestMethod.POST)
-	public ModelAndView saveCreate(@Valid Speciality speciality, BindingResult binding) {
+	public ModelAndView saveCreate(@Valid final Speciality speciality, final BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors()) {
-
-			result = createCreateModelAndView(speciality, null);
-		} else
-
-		{
+		if (binding.hasErrors())
+			result = this.createCreateModelAndView(speciality, null);
+		else
 			try {
 
-				specialityService.save(speciality);
+				this.specialityService.save(speciality);
 				result = new ModelAndView("redirect:/speciality/auditor/list.do");
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				e.printStackTrace();
-				result = createCreateModelAndView(speciality, "commit.error");
+				result = this.createCreateModelAndView(speciality, "commit.error");
 			}
-		}
 
 		return result;
 	}
 
 	@RequestMapping(value = "/saveEdit", method = RequestMethod.POST)
-	public ModelAndView saveEdit(@Valid Speciality speciality, BindingResult binding) {
+	public ModelAndView saveEdit(@Valid final Speciality speciality, final BindingResult binding) {
 		ModelAndView result;
 
 		if (binding.hasErrors()) {
-			for (ObjectError e : binding.getAllErrors()) {
+			for (final ObjectError e : binding.getAllErrors())
 				System.out.println(e.getDefaultMessage());
-			}
 
-			result = createEditModelAndView(speciality, null);
+			result = this.createEditModelAndView(speciality, null);
 		} else
-
-		{
 			try {
 
-				specialityService.save(speciality);
+				this.specialityService.save(speciality);
 				result = new ModelAndView("redirect:/speciality/auditor/list.do");
-			} catch (Throwable e) {
+			} catch (final Throwable e) {
 				e.printStackTrace();
 
-				result = createEditModelAndView(speciality, "commit.error");
+				result = this.createEditModelAndView(speciality, "commit.error");
 			}
-		}
 
 		return result;
 	}

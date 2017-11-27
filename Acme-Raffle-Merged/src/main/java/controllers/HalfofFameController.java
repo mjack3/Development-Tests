@@ -50,7 +50,6 @@ public class HalfofFameController {
 							user.add(p.getUser());
 						if (!prize.contains(pr))
 							prize.add(pr);
-
 					}
 
 		final List<String> codeUsed = new ArrayList<String>();
@@ -58,11 +57,12 @@ public class HalfofFameController {
 		for (final Participation p : this.participationService.findAll())
 			codeUsed.add(p.getUsedCode());
 		for (final User us : this.userservice.findAll())
-
-			if (us.getParticipations().size() / codeUsed.size() >= 0.75)
-				user075.add(us);
+			if (codeUsed.size() > 0)
+				if (us.getParticipations().size() / codeUsed.size() >= 0.75)
+					user075.add(us);
 
 		result.addObject("user075", user075);
+
 		result.addObject("user", user);
 		result.addObject("prize", prize);
 

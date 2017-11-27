@@ -34,8 +34,8 @@ public class ActorSocialIdentityController {
 		ModelAndView result;
 
 		result = new ModelAndView("socialIdentity/list");
-		Actor actor = this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
-		Collection<SocialIdentity> socialIdentity = actor.getSocialIdentities();
+		final Actor actor = this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		final Collection<SocialIdentity> socialIdentity = actor.getSocialIdentities();
 		result.addObject("socialIdentity", socialIdentity);
 
 		return result;
@@ -45,18 +45,21 @@ public class ActorSocialIdentityController {
 	public ModelAndView create() {
 		ModelAndView result;
 
-		result = createNewModelAndView(socialIdentityService.create(), null);
+		result = this.createNewModelAndView(this.socialIdentityService.create(), null);
 
 		return result;
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public ModelAndView edit(@RequestParam int q) {
+	public ModelAndView edit(@RequestParam final int q) {
 		ModelAndView result;
-		Actor actor = this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
-		if (actor.getSocialIdentities().contains(socialIdentityService.findOne(q))) {
-			result = createEditModelAndView(socialIdentityService.findOne(q), null);
-		} else {
+		try {
+			final Actor actor = this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+			if (actor.getSocialIdentities().contains(this.socialIdentityService.findOne(q)))
+				result = this.createEditModelAndView(this.socialIdentityService.findOne(q), null);
+			else
+				result = new ModelAndView("redirect:/welcome/index.do");
+		} catch (final Throwable e) {
 			result = new ModelAndView("redirect:/welcome/index.do");
 		}
 
@@ -64,15 +67,18 @@ public class ActorSocialIdentityController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public ModelAndView delete(@RequestParam int q) {
+	public ModelAndView delete(@RequestParam final int q) {
 		ModelAndView result;
-		SocialIdentity socialIdentity = socialIdentityService.findOne(q);
-		Actor actor = this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
-		if (actor.getSocialIdentities().contains(socialIdentity)) {
-			socialIdentityService.delete(socialIdentity);
-			result = new ModelAndView("redirect:/socialidentity/actor/list.do");
+		final SocialIdentity socialIdentity = this.socialIdentityService.findOne(q);
+		final Actor actor = this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		try {
+			if (actor.getSocialIdentities().contains(socialIdentity)) {
+				this.socialIdentityService.delete(socialIdentity);
+				result = new ModelAndView("redirect:/socialidentity/actor/list.do");
 
-		} else {
+			} else
+				result = new ModelAndView("redirect:/welcome/index.do");
+		} catch (final Throwable e) {
 			result = new ModelAndView("redirect:/welcome/index.do");
 		}
 
@@ -80,44 +86,42 @@ public class ActorSocialIdentityController {
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public ModelAndView saveCreate(@Valid SocialIdentity socialIdentity, BindingResult binding) {
+	public ModelAndView saveCreate(@Valid final SocialIdentity socialIdentity, final BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors()) {
-			result = createNewModelAndView(socialIdentity, null);
-		} else {
+		if (binding.hasErrors())
+			result = this.createNewModelAndView(socialIdentity, null);
+		else
 			try {
-				socialIdentityService.save(socialIdentity);
+				this.socialIdentityService.save(socialIdentity);
 
 				result = new ModelAndView("redirect:/socialidentity/actor/list.do");
-			} catch (Exception e) {
-				result = createNewModelAndView(socialIdentity, "commit.error");
+			} catch (final Exception e) {
+				result = this.createNewModelAndView(socialIdentity, "commit.error");
 			}
-		}
 
 		return result;
 	}
 
 	@RequestMapping(value = "/saveEdit", method = RequestMethod.POST)
-	public ModelAndView saveEdit(@Valid SocialIdentity socialIdentity, BindingResult binding) {
+	public ModelAndView saveEdit(@Valid final SocialIdentity socialIdentity, final BindingResult binding) {
 		ModelAndView result;
 
-		if (binding.hasErrors()) {
-			result = createEditModelAndView(socialIdentity, null);
-		} else {
+		if (binding.hasErrors())
+			result = this.createEditModelAndView(socialIdentity, null);
+		else
 			try {
-				socialIdentityService.save(socialIdentity);
+				this.socialIdentityService.save(socialIdentity);
 
 				result = new ModelAndView("redirect:/socialidentity/actor/list.do");
-			} catch (Exception e) {
-				result = createEditModelAndView(socialIdentity, "commit.error");
+			} catch (final Exception e) {
+				result = this.createEditModelAndView(socialIdentity, "commit.error");
 			}
-		}
 
 		return result;
 	}
 
-	protected ModelAndView createNewModelAndView(SocialIdentity socialIdentity, String message) {
+	protected ModelAndView createNewModelAndView(final SocialIdentity socialIdentity, final String message) {
 		ModelAndView result;
 		result = new ModelAndView("socialIdentity/create");
 		result.addObject("socialIdentity", socialIdentity);
@@ -125,8 +129,8 @@ public class ActorSocialIdentityController {
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndView(SocialIdentity socialIdentity, String message) {
-		ModelAndView result = new ModelAndView("socialIdentity/edit");
+	protected ModelAndView createEditModelAndView(final SocialIdentity socialIdentity, final String message) {
+		final ModelAndView result = new ModelAndView("socialIdentity/edit");
 
 		result.addObject("socialIdentity", socialIdentity);
 		result.addObject("message", message);

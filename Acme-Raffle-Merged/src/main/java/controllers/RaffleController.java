@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import services.RaffleService;
 import domain.Raffle;
-
 import services.AuditReportService;
 import services.RaffleService;
 
@@ -23,11 +21,10 @@ import services.RaffleService;
 public class RaffleController {
 
 	@Autowired
-	private RaffleService	raffleService;
-	
+	private RaffleService		raffleService;
 
 	@Autowired
-	private AuditReportService auditReportService;
+	private AuditReportService	auditReportService;
 
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -39,21 +36,25 @@ public class RaffleController {
 		final List<Raffle> raffle = this.raffleService.findAll();
 		result.addObject("raffle", raffle);
 		result.addObject("today", today);
-		result.addObject("isManager",false);
+		result.addObject("isManager", false);
 
 		return result;
 	}
-	
+
 	@RequestMapping(value = "/listAuditor", method = RequestMethod.GET)
-	public ModelAndView list(@RequestParam Integer q) {
+	public ModelAndView list(@RequestParam final Integer q) {
 		ModelAndView result;
-		Date today = new Date();
-		result = new ModelAndView("raffle/list");
-		result.addObject("requestURI", "raffle/list.do");
-		
-		result.addObject("raffle", Arrays.asList(auditReportService.findOne(q).getRaffle()));
-		result.addObject("today", today);
-		result.addObject("isManager",false);
+		try {
+			final Date today = new Date();
+			result = new ModelAndView("raffle/list");
+			result.addObject("requestURI", "raffle/list.do");
+
+			result.addObject("raffle", Arrays.asList(this.auditReportService.findOne(q).getRaffle()));
+			result.addObject("today", today);
+			result.addObject("isManager", false);
+		} catch (final Throwable e) {
+			result = new ModelAndView("redirect:/welcome/index.do");
+		}
 
 		return result;
 	}

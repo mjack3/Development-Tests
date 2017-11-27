@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +31,8 @@ public class AuditReportAuditorController {
 
 	@Autowired
 	private AuditReportService	auditReportService;
+	@Autowired
+	private LoginService		loginService;
 
 	private Raffle				toSave	= null;
 
@@ -38,11 +41,17 @@ public class AuditReportAuditorController {
 	public ModelAndView list2(@RequestParam final int raffleId) {
 		ModelAndView res;
 
-		res = new ModelAndView("auditReport/all/list");
+		try {
+			res = new ModelAndView("auditReport/all/list");
+			final Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+			Assert.isTrue(auditor.getReports().contains(this.auditReportService.findAllByRaffleFinal(raffleId)));
 
-		final Collection<AuditReport> auditReports = this.auditReportService.findAllByRaffleFinal(raffleId);
+			final Collection<AuditReport> auditReports = this.auditReportService.findAllByRaffleFinal(raffleId);
 
-		res.addObject("auditReports", auditReports);
+			res.addObject("auditReports", auditReports);
+		} catch (final Throwable e) {
+			res = new ModelAndView("redirect:/welcome/index.do");
+		}
 
 		return res;
 	}
@@ -63,14 +72,17 @@ public class AuditReportAuditorController {
 	@RequestMapping("/create")
 	public ModelAndView create(@RequestParam final Raffle q) {
 		ModelAndView res;
+		try {
+			res = new ModelAndView("auditReport/create");
+			final AuditReport auditReport = this.auditReportService.create();
+			auditReport.setMoment(new Date(System.currentTimeMillis() - 1));
+			auditReport.setRaffle(q);
 
-		res = new ModelAndView("auditReport/create");
-		final AuditReport auditReport = this.auditReportService.create();
-		auditReport.setMoment(new Date(System.currentTimeMillis() - 1));
-		auditReport.setRaffle(q);
-
-		res.addObject("auditReport", auditReport);
-		this.toSave = q;
+			res.addObject("auditReport", auditReport);
+			this.toSave = q;
+		} catch (final Throwable e) {
+			res = new ModelAndView("redirect:/welcome/index.do");
+		}
 
 		return res;
 	}
@@ -79,16 +91,21 @@ public class AuditReportAuditorController {
 	public ModelAndView edit(@RequestParam final Integer q) {
 		ModelAndView res;
 
-		res = new ModelAndView("auditReport/edit");
-		final AuditReport auditReport = this.auditReportService.findOne(q);
+		try {
+			res = new ModelAndView("auditReport/edit");
+			final Auditor auditor = this.auditorService.findOneUserAccount(LoginService.getPrincipal().getId());
+			final AuditReport auditReport = this.auditReportService.findOne(q);
+			Assert.isTrue(auditor.getReports().contains(auditReport));
+			if (auditReport.getFinalMode() == true) {
+				res = this.list();
+				res.addObject("message", "error.edit.report");
 
-		if (auditReport.getFinalMode() == true) {
-			res = this.list();
-			res.addObject("message", "error.edit.report");
+			}
 
+			res.addObject("auditReport", auditReport);
+		} catch (final Throwable e) {
+			res = new ModelAndView("redirect:/welcome/index.do");
 		}
-
-		res.addObject("auditReport", auditReport);
 
 		return res;
 	}
@@ -151,6 +168,8 @@ public class AuditReportAuditorController {
 
 		try {
 			final AuditReport prop = this.auditReportService.findOne(q);
+			final Auditor auditor = this.auditorService.findOneUserAccount(LoginService.getPrincipal().getId());
+			Assert.isTrue(auditor.getReports().contains(prop));
 			if (prop.getFinalMode() == true) {
 				final ModelAndView resul = this.list();
 				resul.addObject("message", "error.edit.report");

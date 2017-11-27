@@ -21,14 +21,15 @@
 		<form:hidden path="workRecords" />
 		<form:hidden path="specialities" />
 		<form:hidden path="educationsRecords" />
-		
-	    <form:label path="name"> <spring:message code="curricula.name"/> </form:label>
+		  <div class="form-group" style="width: 20%;"> 
+	    <form:label path="name"  > <spring:message code="curricula.name"/> </form:label>
 		<br />
-		<form:input path="name"/>
+		<form:input path="name" class="form-control"/>
 		<form:errors cssClass="error" path="name" /> <br />
 		
 		
 		<br/>
+		</div>
 		<spring:message code="acme.save" var="creditcardSaveHeader"/>
 		<spring:message code="acme.cancel" var="creditcardCancelHeader"/>
 		

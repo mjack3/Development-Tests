@@ -31,7 +31,7 @@ public class CurriculaAdministratorController {
 	public ModelAndView list() {
 		ModelAndView result;
 
-		List<Curricula> curricula = curriculaService.findAll();
+		final List<Curricula> curricula = this.curriculaService.findAll();
 
 		result = new ModelAndView("curricula/list");
 		result.addObject("requestURI", "curricula/auditor/administrator/list.do");
@@ -42,25 +42,26 @@ public class CurriculaAdministratorController {
 	}
 
 	@RequestMapping(value = "/educationrecord/auditor/administrator/list", method = RequestMethod.GET)
-	public ModelAndView listEducation(@RequestParam int q) {
+	public ModelAndView listEducation(@RequestParam final int q) {
 		ModelAndView result;
 
 		result = new ModelAndView("educationrecord/list");
 		result.addObject("requestURI", "educationrecord/auditor/administrator/list.do");
-		result.addObject("educationrecord", curriculaService.findOne(q).getEducationsRecords());
+		result.addObject("educationrecord", this.curriculaService.findOne(q).getEducationsRecords());
 
 		return result;
 
 	}
 
 	@RequestMapping(value = "/workrecord/auditor/administrator/list", method = RequestMethod.GET)
-	public ModelAndView listworkrecord(@RequestParam int q) {
+	public ModelAndView listworkrecord(@RequestParam final int q) {
 		ModelAndView result;
 
 		result = new ModelAndView("workrecord/list");
+
 		result.addObject("requestURI", "workrecord/auditor/administrator/list.do");
-		result.addObject("workrecord", curriculaService.findOne(q).getWorkRecords());
-		curriculaID = q;
+		result.addObject("workrecord", this.curriculaService.findOne(q).getWorkRecords());
+		this.curriculaID = q;
 
 		return result;
 
@@ -72,16 +73,15 @@ public class CurriculaAdministratorController {
 
 		result = new ModelAndView("workrecord/view");
 
-		Curricula curricula = curriculaService.findOne(curriculaID);
+		final Curricula curricula = this.curriculaService.findOne(this.curriculaID);
 
 		Auditor auditor = new Auditor();
 
-		for (Auditor a : auditorService.findAll()) {
+		for (final Auditor a : this.auditorService.findAll())
 			if (a.getCurricula().equals(curricula)) {
 				auditor = a;
 				break;
 			}
-		}
 
 		result.addObject("report", auditor.getReports());
 
@@ -90,12 +90,12 @@ public class CurriculaAdministratorController {
 	}
 
 	@RequestMapping(value = "/speciality/auditor/administrator/list", method = RequestMethod.GET)
-	public ModelAndView viewaudit(@RequestParam int q) {
+	public ModelAndView viewaudit(@RequestParam final int q) {
 		ModelAndView result;
 
 		result = new ModelAndView("speciality/list");
 		result.addObject("requestURI", "speciality/auditor/administrator/list.do");
-		result.addObject("speciality", curriculaService.findOne(q).getSpecialities());
+		result.addObject("speciality", this.curriculaService.findOne(q).getSpecialities());
 
 		return result;
 

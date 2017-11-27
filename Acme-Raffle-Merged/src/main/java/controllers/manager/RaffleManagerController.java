@@ -18,29 +18,32 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import services.CodeService;
-import services.ManagerService;
-import services.PrizeService;
-import services.RaffleService;
 import controllers.AbstractController;
 import domain.Code;
 import domain.Manager;
 import domain.Prize;
 import domain.Raffle;
 import forms.RaffleForm;
+import security.LoginService;
+import services.CodeService;
+import services.ManagerService;
+import services.PrizeService;
+import services.RaffleService;
 
 @RequestMapping("/raffle/managers/")
 @Controller
 public class RaffleManagerController extends AbstractController {
 
 	@Autowired
-	RaffleService	raffleService;
+	private RaffleService	raffleService;
 	@Autowired
-	ManagerService	managerService;
+	private ManagerService	managerService;
 	@Autowired
-	PrizeService	prizeService;
+	private PrizeService	prizeService;
 	@Autowired
-	CodeService		codeService;
+	private CodeService		codeService;
+	@Autowired
+	private LoginService	loginService;
 
 
 	public RaffleManagerController() {
@@ -58,7 +61,7 @@ public class RaffleManagerController extends AbstractController {
 		final Collection<Raffle> raffle = this.raffleService.findByManager(manag.getId());
 		result.addObject("raffle", raffle);
 		result.addObject("today", today);
-		result.addObject("isManager",true);
+		result.addObject("isManager", true);
 
 		return result;
 	}
@@ -89,13 +92,12 @@ public class RaffleManagerController extends AbstractController {
 					bindingResult.rejectValue("deadline", "raffle.deadlineError", "error");
 					throw new IllegalArgumentException();
 				}
-				
+
 				if (raffleForm.getPublicationTime().before(Calendar.getInstance().getTime())) {
 					bindingResult.rejectValue("publicationTime", "raffle.publicationTimeError", "error");
 					throw new IllegalArgumentException();
 				}
-				
-				
+
 				if (raffleForm.getNum() < raffleForm.getNumWinner()) {
 					bindingResult.rejectValue("num", "error.num", "error");
 					throw new IllegalArgumentException();
@@ -155,7 +157,13 @@ public class RaffleManagerController extends AbstractController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public ModelAndView edit(@RequestParam final int q) {
 		ModelAndView result;
-		result = this.createEditModelAndView(this.raffleService.findOne(q), null);
+		try {
+			final Manager manager = (Manager) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+			Assert.isTrue(manager.getRaffles().contains(this.raffleService.findOne(q)));
+			result = this.createEditModelAndView(this.raffleService.findOne(q), null);
+		} catch (final Throwable e) {
+			result = new ModelAndView("redirect:/welcome/index.do");
+		}
 		return result;
 	}
 
@@ -167,17 +175,18 @@ public class RaffleManagerController extends AbstractController {
 			result = this.createEditModelAndView(raffle, null);
 		else
 			try {
-				
+				final Manager manager = (Manager) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+				Assert.isTrue(manager.getRaffles().contains(raffle));
 				if (raffle.getDeadline().before(raffle.getPublicationTime())) {
 					binding.rejectValue("deadline", "raffle.deadlineError", "error");
 					throw new IllegalArgumentException();
 				}
-				
+
 				if (raffle.getPublicationTime().before(Calendar.getInstance().getTime())) {
 					binding.rejectValue("publicationTime", "raffle.publicationTimeError", "error");
 					throw new IllegalArgumentException();
 				}
-				
+
 				this.raffleService.save(raffle);
 
 				result = new ModelAndView("redirect:/raffle/managers/list.do");

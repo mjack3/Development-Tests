@@ -46,8 +46,12 @@ public class AuditEducationRecordController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public ModelAndView edit(@RequestParam final int q) {
 		ModelAndView result;
-		final EducationRecord educationRecord = this.educationRecordService.findOne(q);
-		result = this.createEditModelAndView(educationRecord, null);
+		try {
+			final EducationRecord educationRecord = this.educationRecordService.findOne(q);
+			result = this.createEditModelAndView(educationRecord, null);
+		} catch (final Throwable e) {
+			result = new ModelAndView("redirect:/welcome/index.do");
+		}
 
 		return result;
 

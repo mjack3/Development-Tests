@@ -35,8 +35,8 @@ public class CurriculaService {
 	}
 
 	public Curricula create() {
-		Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
-		Curricula curricula = new Curricula();
+		final Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		final Curricula curricula = new Curricula();
 		curricula.setName(new String());
 		curricula.setName(auditor.getName() + " " + auditor.getSurname());
 		curricula.setEducationsRecords(new ArrayList<EducationRecord>());
@@ -47,52 +47,53 @@ public class CurriculaService {
 
 	}
 
-	public boolean exists(Integer id) {
+	public boolean exists(final Integer id) {
 		Assert.notNull(id);
-		return curriculaRepository.exists(id);
+		return this.curriculaRepository.exists(id);
 	}
 
 	public List<Curricula> findAll() {
-		return curriculaRepository.findAll();
+		return this.curriculaRepository.findAll();
 	}
 
-	public Curricula save(Curricula entity) {
+	public Curricula save(final Curricula entity) {
 
 		Curricula curricula = new Curricula();
 
-		Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		final Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
 
-		if (curriculaRepository.exists(entity.getId())) {
-			curricula = curriculaRepository.findOne(entity.getId());
+		if (this.curriculaRepository.exists(entity.getId())) {
+			curricula = this.curriculaRepository.findOne(entity.getId());
+			Assert.isTrue(auditor.getCurricula().equals(curricula));
 			curricula.setName(entity.getName());
 			curricula.setEducationsRecords(entity.getEducationsRecords());
 			curricula.setSpecialities(entity.getSpecialities());
 			curricula.setWorkRecords(entity.getWorkRecords());
-			return curriculaRepository.save(curricula);
+			return this.curriculaRepository.save(curricula);
 		} else {
 			entity.setName(auditor.getName() + " " + auditor.getSurname());
 			entity.setEducationsRecords(new ArrayList<EducationRecord>());
 			entity.setSpecialities(new ArrayList<Speciality>());
 			entity.setWorkRecords(new ArrayList<WorkRecord>());
-			curriculaRepository.save(entity);
+			this.curriculaRepository.save(entity);
 			auditor.setCurricula(curricula);
-			auditorService.update(auditor);
-			return curriculaRepository.save(entity);
+			this.auditorService.update(auditor);
+			return this.curriculaRepository.save(entity);
 		}
 	}
 
-	public Curricula findOne(Integer id) {
+	public Curricula findOne(final Integer id) {
 		Assert.notNull(id);
-		return curriculaRepository.findOne(id);
+		return this.curriculaRepository.findOne(id);
 	}
 
-	public Curricula generate(Curricula curricula) {
-		Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+	public Curricula generate(final Curricula curricula) {
+		final Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
 		Assert.isTrue(auditor.getCurricula() == null);
 		Curricula aux = new Curricula();
-		aux = curriculaRepository.save(curricula);
+		aux = this.curriculaRepository.save(curricula);
 		auditor.setCurricula(aux);
-		auditorService.update(auditor);
+		this.auditorService.update(auditor);
 		return aux;
 
 	}

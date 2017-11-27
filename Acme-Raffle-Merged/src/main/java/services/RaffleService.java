@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import domain.AuditReport;
+import domain.Manager;
 import domain.Participation;
 import domain.Prize;
 import domain.Raffle;
 import repositories.RaffleRepository;
+import security.LoginService;
 
 @Service
 @Transactional
@@ -33,6 +35,8 @@ public class RaffleService {
 	private AuditorService			auditorService;
 	@Autowired
 	private AuditReportService		auditReportService;
+	@Autowired
+	private LoginService			loginService;
 
 
 	public Raffle save(final Raffle raffle) {
@@ -77,6 +81,8 @@ public class RaffleService {
 	public void delete(final Raffle raffle) {
 		Assert.notNull(raffle);
 		Assert.isTrue(this.raffleRepository.exists(raffle.getId()));
+		final Manager actor = (Manager) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		Assert.isTrue(actor.getRaffles().contains(raffle));
 		for (final Prize p : raffle.getPrizes())
 			this.prizeService.delete(p);
 		for (final Participation p : raffle.getParticipations())

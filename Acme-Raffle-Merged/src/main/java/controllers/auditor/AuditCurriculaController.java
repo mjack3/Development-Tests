@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,55 +34,56 @@ public class AuditCurriculaController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list() {
 		ModelAndView result;
-		Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
-		List<Curricula> curricula = new ArrayList<Curricula>();
+		final Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		final List<Curricula> curricula = new ArrayList<Curricula>();
 
 		result = new ModelAndView("curricula/list");
 		result.addObject("requestURI", "curricula/auditor/list.do");
 		result.addObject("auditor", auditor);
 
-		if (auditor.getCurricula() == null) {
+		if (auditor.getCurricula() == null)
 			result.addObject("curricula", curricula);
-		} else {
+		else
 			result.addObject("curricula", auditor.getCurricula());
-		}
 
 		return result;
 
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
-	public ModelAndView edit(@RequestParam int q) {
+	public ModelAndView edit(@RequestParam final int q) {
 		ModelAndView result;
-
-		result = createEditModelAndView(curriculaService.findOne(q), null);
-
+		try {
+			final Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+			Assert.isTrue(auditor.getCurricula().equals(this.curriculaService.findOne(q)));
+			result = this.createEditModelAndView(this.curriculaService.findOne(q), null);
+		} catch (final Throwable e) {
+			result = new ModelAndView("redirect:/welcome/index.do");
+		}
 		return result;
 
 	}
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public ModelAndView save(@Valid Curricula curricula, BindingResult binding) {
+	public ModelAndView save(@Valid final Curricula curricula, final BindingResult binding) {
 		ModelAndView result;
 
 		if (binding.hasErrors()) {
-			for (ObjectError e : binding.getAllErrors()) {
+			for (final ObjectError e : binding.getAllErrors())
 				System.out.println(e.toString());
-			}
 
-			result = createEditModelAndView(curricula, null);
-		} else {
+			result = this.createEditModelAndView(curricula, null);
+		} else
 			try {
 
-				curriculaService.save(curricula);
+				this.curriculaService.save(curricula);
 
 				result = new ModelAndView("redirect:/curricula/auditor/list.do");
 
-			} catch (Throwable th) {
+			} catch (final Throwable th) {
 				th.printStackTrace();
-				result = createEditModelAndView(curricula, "actor.commit.error");
+				result = this.createEditModelAndView(curricula, "actor.commit.error");
 			}
-		}
 		return result;
 
 	}
@@ -90,13 +92,13 @@ public class AuditCurriculaController {
 	public ModelAndView generateCurricula() {
 
 		ModelAndView result;
-		Curricula curricula = curriculaService.create();
+		final Curricula curricula = this.curriculaService.create();
 		try {
 
-			curriculaService.generate(curricula);
+			this.curriculaService.generate(curricula);
 
 			result = new ModelAndView("redirect:/curricula/auditor/list.do");
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			result = new ModelAndView("redirect:/curricula/auditor/list.do");
 			result.addObject("message", "commit.error");
 

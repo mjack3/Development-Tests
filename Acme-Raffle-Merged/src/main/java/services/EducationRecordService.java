@@ -32,7 +32,7 @@ public class EducationRecordService {
 	}
 
 	public EducationRecord create() {
-		EducationRecord educationRecord = new EducationRecord();
+		final EducationRecord educationRecord = new EducationRecord();
 		educationRecord.setTitle(new String());
 		educationRecord.setDescription(new String());
 		educationRecord.setStartDate(new Date());
@@ -42,61 +42,61 @@ public class EducationRecordService {
 	}
 
 	public List<EducationRecord> findAll() {
-		return educationRecordRepository.findAll();
+		return this.educationRecordRepository.findAll();
 	}
 
-	public EducationRecord save(EducationRecord entity) {
+	public EducationRecord save(final EducationRecord entity) {
 
 		EducationRecord educationRecord = new EducationRecord();
-		Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
-		if (educationRecordRepository.exists(entity.getId())) {
-			educationRecord=educationRecordRepository.findOne(entity.getId());
+		final Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		if (this.educationRecordRepository.exists(entity.getId())) {
+			educationRecord = this.educationRecordRepository.findOne(entity.getId());
 			Assert.isTrue(auditor.getCurricula().getEducationsRecords().contains(educationRecord));
 			educationRecord.setTitle(entity.getTitle());
 			educationRecord.setDescription(entity.getDescription());
 			educationRecord.setStartDate(entity.getStartDate());
 			educationRecord.setEndDate(entity.getEndDate());
-			return educationRecordRepository.save(educationRecord);
+			return this.educationRecordRepository.save(educationRecord);
 
 		} else {
-			EducationRecord educationRecordnew = educationRecordRepository.save(entity);
+			final EducationRecord educationRecordnew = this.educationRecordRepository.save(entity);
 			auditor.getCurricula().getEducationsRecords().add(educationRecordnew);
-			auditorService.save(auditor);
-
-			return educationRecordnew;
-
-		}
-	}
-	
-	public EducationRecord saveAF(EducationRecord entity) {
-
-		EducationRecord educationRecord = new EducationRecord();
-		Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
-		if (educationRecordRepository.exists(entity.getId())) {
-			educationRecord=educationRecordRepository.findOne(entity.getId());
-			Assert.isTrue(auditor.getCurricula().getEducationsRecords().contains(educationRecord));
-			educationRecord.setTitle(entity.getTitle());
-			educationRecord.setDescription(entity.getDescription());
-			educationRecord.setStartDate(entity.getStartDate());
-			educationRecord.setEndDate(entity.getEndDate());
-			return educationRecordRepository.saveAndFlush(educationRecord);
-
-		} else {
-			EducationRecord educationRecordnew = educationRecordRepository.save(entity);
-			auditor.getCurricula().getEducationsRecords().add(educationRecordnew);
-			auditorService.save(auditor);
+			this.auditorService.save(auditor);
 
 			return educationRecordnew;
 
 		}
 	}
 
-	public EducationRecord findOne(Integer id) {
+	public EducationRecord saveAF(final EducationRecord entity) {
+
+		EducationRecord educationRecord = new EducationRecord();
+		final Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		if (this.educationRecordRepository.exists(entity.getId())) {
+			educationRecord = this.educationRecordRepository.findOne(entity.getId());
+			Assert.isTrue(auditor.getCurricula().getEducationsRecords().contains(educationRecord));
+			educationRecord.setTitle(entity.getTitle());
+			educationRecord.setDescription(entity.getDescription());
+			educationRecord.setStartDate(entity.getStartDate());
+			educationRecord.setEndDate(entity.getEndDate());
+			return this.educationRecordRepository.saveAndFlush(educationRecord);
+
+		} else {
+			final EducationRecord educationRecordnew = this.educationRecordRepository.save(entity);
+			auditor.getCurricula().getEducationsRecords().add(educationRecordnew);
+			this.auditorService.save(auditor);
+
+			return educationRecordnew;
+
+		}
+	}
+
+	public EducationRecord findOne(final Integer id) {
 		Assert.notNull(id);
-		Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
-		Assert.isTrue(auditor.getCurricula().getEducationsRecords().contains(educationRecordRepository.findOne(id)));
+		final Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		Assert.isTrue(auditor.getCurricula().getEducationsRecords().contains(this.educationRecordRepository.findOne(id)));
 
-		return educationRecordRepository.findOne(id);
+		return this.educationRecordRepository.findOne(id);
 	}
 
 }

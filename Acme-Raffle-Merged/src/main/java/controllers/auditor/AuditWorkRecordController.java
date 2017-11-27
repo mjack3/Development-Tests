@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import domain.Auditor;
 import domain.WorkRecord;
 import security.LoginService;
+import services.AuditorService;
 import services.WorkRecordService;
 
 @Controller
@@ -26,6 +28,8 @@ public class AuditWorkRecordController {
 	private WorkRecordService	workRecordService;
 	@Autowired
 	private LoginService		loginService;
+	@Autowired
+	private AuditorService		auditorService;
 
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -58,8 +62,14 @@ public class AuditWorkRecordController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public ModelAndView edit(@RequestParam final int q) {
 		ModelAndView result;
-		final WorkRecord workRecord = this.workRecordService.findOne(q);
-		result = this.createEditModelAndView(workRecord, null);
+		try {
+			final WorkRecord workRecord = this.workRecordService.findOne(q);
+			final Auditor auditor = this.auditorService.findOneUserAccount(LoginService.getPrincipal().getId());
+			Assert.isTrue(auditor.getCurricula().getWorkRecords().contains(workRecord));
+			result = this.createEditModelAndView(workRecord, null);
+		} catch (final Throwable e) {
+			result = new ModelAndView("redirect:/welcome/index.do");
+		}
 
 		return result;
 

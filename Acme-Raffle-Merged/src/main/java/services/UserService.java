@@ -12,12 +12,12 @@ import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import domain.Participation;
+import domain.User;
 import repositories.UserRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
-import domain.Participation;
-import domain.User;
 
 @Service
 @Transactional
@@ -27,6 +27,8 @@ public class UserService {
 
 	@Autowired
 	private UserRepository	userRepository;
+	@Autowired
+	private LoginService	loginService;
 
 
 	//Constructor
@@ -69,6 +71,8 @@ public class UserService {
 
 		if (this.exists(user.getId())) {
 			u = this.findOne(user.getId());
+			final User userd = (User) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+			Assert.isTrue(userd.getId() == u.getId());
 			u.setName(user.getName());
 			u.setCity(user.getCity());
 			u.setCountry(user.getCountry());
@@ -77,7 +81,7 @@ public class UserService {
 			u.setPostal(user.getPostal());
 			u.setSurname(user.getSurname());
 			//user.setPrizes(user.getPrizes());
-			user.setParticipations(user.getParticipations());
+			u.setParticipations(user.getParticipations());
 			u = this.userRepository.save(u);
 		} else {
 			final Md5PasswordEncoder encoder = new Md5PasswordEncoder();

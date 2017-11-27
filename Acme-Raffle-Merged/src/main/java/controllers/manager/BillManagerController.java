@@ -51,6 +51,7 @@ public class BillManagerController {
 		final Bill bill = this.billService.findOne(q);
 		bill.setPayed(new Date(System.currentTimeMillis() - 1));
 		try {
+
 			this.billService.pay(bill);
 
 			result = new ModelAndView("redirect:/bill/manager/list.do");

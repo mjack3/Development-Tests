@@ -13,11 +13,11 @@ import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import repositories.AuditReportRepository;
-import security.LoginService;
 import domain.AuditReport;
 import domain.Auditor;
 import domain.Raffle;
+import repositories.AuditReportRepository;
+import security.LoginService;
 
 @Service
 @Transactional
@@ -56,6 +56,8 @@ public class AuditReportService {
 	public AuditReport update(final AuditReport entity) {
 		Assert.notNull(entity);
 		Assert.isTrue(this.repository.exists(entity.getId()));
+		final Auditor auditor = this.auditorService.findOneUserAccount(LoginService.getPrincipal().getId());
+		Assert.isTrue(auditor.getReports().contains(entity));
 		if (this.repository.findOne(entity.getId()).getFinalMode())
 			return entity;
 		return this.repository.saveAndFlush(entity);
@@ -82,7 +84,7 @@ public class AuditReportService {
 	}
 	/**
 	 * Encuentra
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -103,8 +105,8 @@ public class AuditReportService {
 	}
 
 
-	@Autowired(required=false)
-	private Validator	validator;
+	@Autowired(required = false)
+	private Validator validator;
 
 
 	public AuditReport reconstruct(AuditReport auditreport, final BindingResult binding) {

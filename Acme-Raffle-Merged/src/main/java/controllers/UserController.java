@@ -5,6 +5,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import domain.User;
+import security.LoginService;
 import services.UserService;
 import utilities.Validator;
 
@@ -20,7 +22,9 @@ import utilities.Validator;
 public class UserController extends AbstractController {
 
 	@Autowired
-	private UserService userService;
+	private UserService		userService;
+	@Autowired
+	private LoginService	loginService;
 
 
 	public UserController() {
@@ -86,11 +90,17 @@ public class UserController extends AbstractController {
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
 	public ModelAndView edit(final int userAccountID) {
 		ModelAndView result;
-		User user;
+		try {
+			User user;
 
-		user = this.userService.findActorByUsername(userAccountID);
+			user = this.userService.findActorByUsername(userAccountID);
+			final User userd = (User) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+			Assert.isTrue(userd.getId() == user.getId());
 
-		result = this.createEditModelAndView(user);
+			result = this.createEditModelAndView(user);
+		} catch (final Throwable e) {
+			result = new ModelAndView("redirect:/welcome/index.do");
+		}
 
 		return result;
 	}

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import domain.Manager;
+import security.LoginService;
 import services.AdministratorService;
 import services.ManagerService;
 import utilities.Validator;
@@ -26,6 +27,8 @@ public class ManagerController extends AbstractController {
 	private ManagerService			managerService;
 	@Autowired
 	private AdministratorService	administratorService;
+	@Autowired
+	private LoginService			loginService;
 
 
 	public ManagerController() {
@@ -92,10 +95,16 @@ public class ManagerController extends AbstractController {
 	public ModelAndView edit(final int userAccountID) {
 		ModelAndView result;
 		Manager mana;
+		try {
 
-		mana = this.managerService.findManagerByUsername(userAccountID);
+			mana = this.managerService.findManagerByUsername(userAccountID);
+			final Manager manager = (Manager) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+			Assert.isTrue(manager.getId() == mana.getId());
 
-		result = this.createEditModelAndView(mana);
+			result = this.createEditModelAndView(mana);
+		} catch (final Throwable e) {
+			result = new ModelAndView("redirect:/welcome/index.do");
+		}
 
 		return result;
 	}

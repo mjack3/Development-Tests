@@ -11,11 +11,12 @@ import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import repositories.AuditorRepository;
-import security.Authority;
-import security.UserAccount;
 import domain.Auditor;
 import forms.AuditorForm;
+import repositories.AuditorRepository;
+import security.Authority;
+import security.LoginService;
+import security.UserAccount;
 
 @Service
 @Transactional
@@ -23,6 +24,8 @@ public class AuditorService {
 
 	@Autowired
 	private AuditorRepository	repository;
+	@Autowired
+	private LoginService		loginService;
 
 
 	public AuditorService() {
@@ -42,6 +45,9 @@ public class AuditorService {
 	public Auditor update(final Auditor entity) {
 		Assert.notNull(entity);
 		Assert.isTrue(this.repository.exists(entity.getId()));
+		final Auditor userd = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+		Assert.isTrue(userd.getId() == entity.getId());
+
 		return this.repository.save(entity);
 	}
 

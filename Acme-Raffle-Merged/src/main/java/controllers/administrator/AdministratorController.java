@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import domain.Administrator;
 import domain.Bill;
+import security.LoginService;
 import services.AdministratorService;
 import services.BillService;
 import utilities.Validator;
@@ -24,10 +26,13 @@ import utilities.Validator;
 public class AdministratorController {
 
 	@Autowired
-	private AdministratorService administratorService;
+	private AdministratorService	administratorService;
 
 	@Autowired
-	private BillService billService;
+	private BillService				billService;
+	@Autowired
+	private LoginService			loginService;
+
 
 	@RequestMapping("/dashboard")
 	public ModelAndView dashboard() {
@@ -55,10 +60,15 @@ public class AdministratorController {
 	public ModelAndView edit(final int userAccountID) {
 		ModelAndView result;
 		Administrator admin;
+		try {
+			final Administrator administ = (Administrator) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+			admin = this.administratorService.findActorByUsername(userAccountID);
+			Assert.isTrue(administ.getId() == admin.getId());
 
-		admin = this.administratorService.findActorByUsername(userAccountID);
-
-		result = this.createEditModelAndView(admin);
+			result = this.createEditModelAndView(admin);
+		} catch (final Throwable e) {
+			result = new ModelAndView("redirect:/welcome/index.do");
+		}
 
 		return result;
 	}
@@ -104,36 +114,36 @@ public class AdministratorController {
 
 		return result;
 	}
-	
+
 	@RequestMapping(value = "/bill/list", method = RequestMethod.GET)
-	 public ModelAndView listBill() {
+	public ModelAndView listBill() {
 
-	  ModelAndView res;
-	  res = new ModelAndView("bill/list");
-	  final List<Bill> bill = this.billService.findAll();
+		ModelAndView res;
+		res = new ModelAndView("bill/list");
+		final List<Bill> bill = this.billService.findAll();
 
-	  res.addObject("requestURI", "/administrator/bill/list.do");
-	  res.addObject("bill", bill);
-	  return res;
+		res.addObject("requestURI", "/administrator/bill/list.do");
+		res.addObject("bill", bill);
+		return res;
 
-	 }
+	}
 
-	 protected ModelAndView createEditModelAndViewBill(final Bill bill) {
+	protected ModelAndView createEditModelAndViewBill(final Bill bill) {
 
-	  ModelAndView result;
-	  result = this.createEditModelAndViewBill(bill, null);
-	  return result;
-	 }
+		ModelAndView result;
+		result = this.createEditModelAndViewBill(bill, null);
+		return result;
+	}
 
-	 protected ModelAndView createEditModelAndViewBill(final Bill bill, final String message) {
+	protected ModelAndView createEditModelAndViewBill(final Bill bill, final String message) {
 
-	  ModelAndView result;
+		ModelAndView result;
 
-	  result = new ModelAndView("bill/generate");
-	  result.addObject("bill", bill);
-	  result.addObject("message", message);
+		result = new ModelAndView("bill/generate");
+		result.addObject("bill", bill);
+		result.addObject("message", message);
 
-	  return result;
-	 }
+		return result;
+	}
 
 }

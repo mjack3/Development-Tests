@@ -40,6 +40,10 @@ public class AdministratorService {
 	@Autowired
 	private ManagerService			managerService;
 
+	@Autowired
+	private LoginService			loginService;
+
+
 	//Constructor
 
 	public AdministratorService() {
@@ -79,7 +83,10 @@ public class AdministratorService {
 		Administrator a = null;
 
 		if (this.exists(administrator.getId())) {
+
 			a = this.findOne(administrator.getId());
+			final Administrator administ = (Administrator) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+			Assert.isTrue(administ.getId() == a.getId());
 			a.setName(administrator.getName());
 			a.setCity(administrator.getCity());
 			a.setCountry(administrator.getCountry());
@@ -182,7 +189,7 @@ public class AdministratorService {
 	public List<Object> dashboard() {
 		final List<Object> res = new LinkedList<Object>();
 
-		res.add(this.userService.usersBanned().size()*1.0/ this.userService.findAll().size());
+		res.add(this.userService.usersBanned().size() * 1.0 / this.userService.findAll().size());
 		res.add(this.administratorRepository.prizesPerRaffle());
 		res.add(this.administratorRepository.codesPerPrizes());
 		res.add(this.administratorRepository.validCodesPerUser());
