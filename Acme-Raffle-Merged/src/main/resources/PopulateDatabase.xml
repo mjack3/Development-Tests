@@ -137,7 +137,7 @@
 		<property name="name" value="nameAdmin" />
 		<property name="surname" value="surnameAdmin1" />
 		<property name="email" value="emailAdmin1@user.es" />
-		<property name="phone" value="+34 (67) 687975536" />
+		<property name="phone" value="" />
 		<property name="postal" value="11560" />
 		<property name="city" value="Sevilla" />
 		<property name="country" value="España" />
@@ -153,7 +153,7 @@
 		<property name="name" value="nameUser1" />
 		<property name="surname" value="surnameUser1" />
 		<property name="email" value="emailUser1@user.es" />
-		<property name="phone" value="+34 (22) 687975536" />
+		<property name="phone" value="+34(22)687975536" />
 		<property name="postal" value="11560" />
 		<property name="city" value="Sevilla" />
 		<property name="country" value="España" />
@@ -177,7 +177,7 @@
 		<property name="name" value="nameUser2" />
 		<property name="surname" value="surnameUser2" />
 		<property name="email" value="emailUser2@user.es" />
-		<property name="phone" value="+34 (67) 687975536" />
+		<property name="phone" value="+34(67)687975536" />
 		<property name="postal" value="11560" />
 		<property name="city" value="Sevilla" />
 		<property name="country" value="España" />
@@ -202,7 +202,7 @@
 		<property name="name" value="nameManager1" />
 		<property name="surname" value="surnameManager1" />
 		<property name="email" value="emailManager@manager.es" />
-		<property name="phone" value="+34 (67) 687975536" />
+		<property name="phone" value="+34(67)687975536" />
 		<property name="postal" value="11560" />
 		<property name="city" value="Sevilla" />
 		<property name="country" value="España" />
@@ -226,7 +226,7 @@
 		<property name="name" value="nameManager2" />
 		<property name="surname" value="surnameManager2" />
 		<property name="email" value="emailManager2@manager.es" />
-		<property name="phone" value="+34 (23) 687975536" />
+		<property name="phone" value="+34(23)687975536" />
 		<property name="postal" value="11560" />
 		<property name="city" value="Bruselas" />
 		<property name="country" value="Bélgica" />
@@ -252,7 +252,7 @@
 		<property name="name" value="nameAuditor1" />
 		<property name="surname" value="surnameAuditor1" />
 		<property name="email" value="emailAuditor1@auditor.es" />
-		<property name="phone" value="+34 (67) 687975536" />
+		<property name="phone" value="+34687975536" />
 		<property name="postal" value="11560" />
 		<property name="city" value="Coruña" />
 		<property name="country" value="España" />
@@ -278,7 +278,7 @@
 		<property name="name" value="nameAuditor2" />
 		<property name="surname" value="surnameAuditor2" />
 		<property name="email" value="emailAuditor2@auditor.es" />
-		<property name="phone" value="+34 (11) 687975536" />
+		<property name="phone" value="687975536" />
 		<property name="postal" value="11560" />
 		<property name="city" value="Sevilla" />
 		<property name="country" value="España" />
@@ -948,7 +948,7 @@
 		<property name="name" value="nameManager3" />
 		<property name="surname" value="surnameManager3" />
 		<property name="email" value="emailManager2@manager.es" />
-		<property name="phone" value="+34 (34) 687975536" />
+		<property name="phone" value="+34(34)687975536" />
 		<property name="postal" value="11560" />
 		<property name="city" value="Sevilla" />
 		<property name="country" value="España" />
@@ -971,7 +971,7 @@
 		<property name="name" value="audiprueba" />
 		<property name="surname" value="surnameaudiprueba" />
 		<property name="email" value="emailAuditor2@auditor.es" />
-		<property name="phone" value="+34 (34) 687975589" />
+		<property name="phone" value="+34(34)687975589" />
 		<property name="postal" value="11560" />
 		<property name="city" value="Sevilla" />
 		<property name="country" value="España" />

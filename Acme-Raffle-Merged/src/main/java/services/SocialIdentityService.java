@@ -9,14 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import repositories.SocialIdentityRepository;
+import security.Authority;
+import security.LoginService;
 import domain.Actor;
 import domain.Administrator;
 import domain.Manager;
 import domain.SocialIdentity;
 import domain.User;
-import repositories.SocialIdentityRepository;
-import security.Authority;
-import security.LoginService;
 
 @Service
 @Transactional
@@ -61,7 +61,7 @@ public class SocialIdentityService {
 			Assert.isTrue(actor.getSocialIdentities().contains(aux));
 			aux.setNick(entity.getNick());
 			aux.setUrl(entity.getUrl());
-			this.socialIdentityRepository.save(aux);
+			aux = this.socialIdentityRepository.save(aux);
 
 		} else {
 
@@ -78,7 +78,7 @@ public class SocialIdentityService {
 
 		}
 
-		return this.socialIdentityRepository.save(entity);
+		return aux;
 	}
 
 	public SocialIdentity findOne(final Integer id) {
