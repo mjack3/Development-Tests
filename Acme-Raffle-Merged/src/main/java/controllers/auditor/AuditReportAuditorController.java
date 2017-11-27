@@ -43,8 +43,6 @@ public class AuditReportAuditorController {
 
 		try {
 			res = new ModelAndView("auditReport/all/list");
-			final Auditor auditor = (Auditor) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
-			Assert.isTrue(auditor.getReports().contains(this.auditReportService.findAllByRaffleFinal(raffleId)));
 
 			final Collection<AuditReport> auditReports = this.auditReportService.findAllByRaffleFinal(raffleId);
 
