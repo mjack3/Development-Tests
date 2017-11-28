@@ -8,7 +8,7 @@
 <%@taglib prefix="acme" tagdir="/WEB-INF/tags"%>
 
 
-<acme:list requestURI="tabooword/administrator/list.do" list="${taboowords}" 
+<acme:list requestURI="tabooword/administrator/list.do" pagesize="12" list="${taboowords}" 
 editUrl="tabooword/administrator/edit.do" deleteUrl="tabooword/administrator/delete.do">
 </acme:list>
 

@@ -118,6 +118,7 @@ public class UserController extends AbstractController {
 					binding.rejectValue("phone", "error.phone", "error");
 					throw new IllegalArgumentException();
 				}
+
 				this.userService.save(user);
 				result = new ModelAndView("redirect:/welcome/index.do");
 			} catch (final Throwable th) {

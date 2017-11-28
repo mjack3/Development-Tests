@@ -9,7 +9,7 @@
 
 
 <acme:list requestURI="user/administrator/list.do" list="${users}" 
-hidden_fields="prizes,participations,userAccount,validCodes" variable="a">
+hidden_fields="prizes,participations,userAccount,validCodes" pagesize="12" variable="a">
 
 <jstl:if test="${bannedUsers.contains(a) }">
 	<td>

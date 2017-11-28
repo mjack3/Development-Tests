@@ -71,8 +71,10 @@ public class UserService {
 
 		if (this.exists(user.getId())) {
 			u = this.findOne(user.getId());
-			final User userd = (User) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
-			Assert.isTrue(userd.getId() == u.getId());
+			if (!LoginService.hasRole("ADMIN")) {
+				final User userd = (User) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+				Assert.isTrue(userd.getId() == user.getId());
+			}
 			u.setName(user.getName());
 			u.setCity(user.getCity());
 			u.setCountry(user.getCountry());

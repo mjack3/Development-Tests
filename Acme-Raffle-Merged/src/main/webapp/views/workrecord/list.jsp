@@ -26,7 +26,7 @@
 			</security:authorize>
 		</div>
 
-<acme:list requestURI="${requestURI}" list="${workrecord}" variable="e">
+<acme:list requestURI="${requestURI}" list="${workrecord}" variable="e" pagesize="12">
 
 <security:authorize access="hasRole('AUDITOR')">
 <a href="workrecord/auditor/edit.do?q=${e.id}"><spring:message code="acme.edit"></spring:message></a>

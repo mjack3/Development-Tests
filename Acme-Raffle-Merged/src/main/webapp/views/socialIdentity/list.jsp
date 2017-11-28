@@ -8,8 +8,8 @@
 <%@taglib prefix="acme" tagdir="/WEB-INF/tags"%>
 
 
-<acme:list requestURI="socialidentity/actor/list.do" list="${socialIdentity}" 
-editUrl="socialidentity/actor/edit.do" deleteUrl="socialidentity/actor/delete.do">
+<acme:list requestURI="socialidentity/actor/list.do"  pagesize="12" list="${socialIdentity}" 
+editUrl="socialidentity/actor/edit.do" deleteUrl="socialidentity/actor/delete.do" >
 </acme:list>
 
 <br/>

@@ -42,7 +42,7 @@
 
 </security:authorize>
 <security:authorize access="hasRole('AUDITOR')">
-<acme:list requestURI="${requestURI}"  list="${curricula}" variable="e"
+<acme:list requestURI="${requestURI}"  list="${curricula}" variable="e" pagesize="12"
 entityUrl="{educationsRecords:educationrecord/auditor/list.do,workRecords:workrecord/auditor/list.do,specialities:speciality/auditor/list.do}"
 
  >
@@ -59,7 +59,7 @@ entityUrl="{educationsRecords:educationrecord/auditor/list.do,workRecords:workre
 
 
 <security:authorize access="hasRole('ADMIN')">
-<acme:list requestURI="${requestURI}"  list="${curricula}" variable="e"
+<acme:list requestURI="${requestURI}"  list="${curricula}" variable="e" pagesize="12"
 entityUrl="{educationsRecords:curricula/educationrecord/auditor/administrator/list.do,workRecords:curricula/workrecord/auditor/administrator/list.do,specialities:curricula/speciality/auditor/administrator/list.do}"
 
  ></acme:list>

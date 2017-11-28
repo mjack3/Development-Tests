@@ -10,7 +10,7 @@
 <%@ taglib prefix="acme" tagdir="/WEB-INF/tags"%>
 
 <security:authorize access="hasRole('ADMIN')">
-<acme:list requestURI="mana/administrator/list.do" list="${manager}" variable="e" hidden_fields="isDebtor,raffles,CreditCard,socialIdentities,userAccount">
+<acme:list requestURI="mana/administrator/list.do" list="${manager}" pagesize="12" variable="e" hidden_fields="isDebtor,raffles,CreditCard,socialIdentities,userAccount">
 	
 	<td>
 	

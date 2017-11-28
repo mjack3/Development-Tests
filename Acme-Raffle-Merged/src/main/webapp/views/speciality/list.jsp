@@ -11,7 +11,7 @@
 
 
 
-<acme:list requestURI="${requestURI}" list="${speciality}" variable="e">
+<acme:list requestURI="${requestURI}" list="${speciality}" variable="e" pagesize="12">
 
 <security:authorize access="hasRole('AUDITOR')">
 <a href="speciality/auditor/edit.do?q=${e.id}"><spring:message code="acme.edit"></spring:message></a>

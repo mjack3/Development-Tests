@@ -28,7 +28,9 @@ public class ManagerService {
 	//Manager repositories
 
 	@Autowired
-	private ManagerRepository managerRepository;
+	private ManagerRepository	managerRepository;
+	@Autowired
+	private LoginService		loginService;
 
 
 	//Constructor
@@ -71,6 +73,10 @@ public class ManagerService {
 
 		if (this.exists(manager.getId())) {
 			m = this.findOne(manager.getId());
+			if (!LoginService.hasRole("ADMIN")) {
+				final Manager mana = (Manager) this.loginService.findActorByUsername(LoginService.getPrincipal().getId());
+				Assert.isTrue(m.getId() == mana.getId());
+			}
 			m.setName(manager.getName());
 			m.setCity(manager.getCity());
 			m.setCountry(manager.getCountry());
